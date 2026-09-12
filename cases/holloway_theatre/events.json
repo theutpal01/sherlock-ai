@@ -1,0 +1,17 @@
+{
+  "comment": "Deterministic world events (case clock / event counter, not wall-clock).",
+  "events": [
+    {
+      "id": "EVT_NELL_RELOCATE",
+      "description": "After the bell log is found, Nell withdraws to the foyer and will talk there.",
+      "trigger": {"type": "evidence_discovered", "evidence": "E_BELL"},
+      "effect": {"type": "move_npc", "npc": "nell", "to": "foyer"}
+    },
+    {
+      "id": "EVT_OTTO_CONFRONT",
+      "description": "After the rosin trail is found, Otto slips onto the stage, afraid of what it means.",
+      "trigger": {"type": "evidence_discovered", "evidence": "E_ROSIN"},
+      "effect": {"type": "move_npc", "npc": "otto", "to": "stage"}
+    }
+  ]
+}

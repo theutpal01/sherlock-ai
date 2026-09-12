@@ -1,0 +1,36 @@
+{
+  "npcs": [
+    {
+      "id": "vera",
+      "name": "Vera Lacroix",
+      "role": "Diva",
+      "location": "auditorium",
+      "description": "A celebrated soprano with paint on her smile and worry behind it."
+    },
+    {
+      "id": "nell",
+      "name": "Nell Pryce",
+      "role": "Stage Manager",
+      "location": "stage",
+      "description": "Keeps the master key on her belt and the whole company in line."
+    },
+    {
+      "id": "otto",
+      "name": "Otto Brandt",
+      "role": "Stagehand",
+      "location": "alley",
+      "description": "Broad-shouldered, rosin to the elbows; will not meet your eye."
+    }
+  ],
+  "objects": [
+    {"id": "call_bell", "room": "stage", "label": "Call bell", "evidence": "E_BELL"},
+    {"id": "violin_case", "room": "dressing", "label": "Open safe", "evidence": "E_SAFE"},
+    {"id": "veras_programme", "room": "foyer", "label": "Vera's programme", "evidence": "E_PROGRAMME"},
+    {"id": "gambling_iou", "room": "dressing", "label": "Torn IOU", "evidence": "E_DEBTS"},
+    {"id": "rosin_dust", "room": "stage", "label": "Rosin dust", "evidence": "E_ROSIN"},
+    {"id": "work_boots", "room": "alley", "label": "Work boots", "evidence": "E_BOOTS"}
+  ],
+  "doors": [
+    {"id": "stage_door", "between": ["stage", "dressing"], "locked": false, "note": "Unlocked in v1; lock mechanics are a future milestone."}
+  ]
+}

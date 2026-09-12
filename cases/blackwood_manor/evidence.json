@@ -1,0 +1,97 @@
+{
+  "evidence": [
+    {
+      "id": "E_CLOCK",
+      "title": "Stopped Grandfather Clock",
+      "description": "The pendulum hangs still; the hands read half past nine and seventeen minutes.",
+      "location": "hall",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "grandfather_clock"},
+      "reveals": [{"name": "clock_stopped_at", "args": ["hall_clock", "21_17"]}]
+    },
+    {
+      "id": "E_SAFE",
+      "title": "Open Wall Safe",
+      "description": "The safe hangs open. The diamond is gone.",
+      "location": "study",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "study_safe"},
+      "reveals": [{"name": "safe_open", "args": ["study_safe"]}]
+    },
+    {
+      "id": "E_LOCK",
+      "title": "Undamaged Safe Lock",
+      "description": "A close look at the lock: no scratches, no force. It was opened with a key.",
+      "location": "study",
+      "requires": ["E_SAFE"],
+      "discovery": {"kind": "interact", "object_id": "safe_lock"},
+      "reveals": [{"name": "opened_with_key", "args": ["study_safe"]}]
+    },
+    {
+      "id": "E_COAT",
+      "title": "Spare Key in Bob's Coat",
+      "description": "In the pocket of Bob's coat: a spare safe key, still warm from his hand.",
+      "location": "entrance",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "bobs_coat"},
+      "reveals": [{"name": "has_key", "args": ["bob", "spare_key"]}]
+    },
+    {
+      "id": "E_LETTER",
+      "title": "Torn Debt Letter",
+      "description": "A moneylender's letter, torn in quarters: Bob owes Lennox more than he can ever repay.",
+      "location": "library",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "torn_letter"},
+      "reveals": [{"name": "owes_money", "args": ["bob", "lennox"]}]
+    },
+    {
+      "id": "E_MUD",
+      "title": "Muddy Footprints",
+      "description": "Fresh field-mud prints cross the study rug to the door and back.",
+      "location": "study",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "muddy_prints"},
+      "reveals": [{"name": "footprints_in", "args": ["study", "field_mud"]}]
+    },
+    {
+      "id": "E_BOOTS",
+      "title": "Theo's Field Boots",
+      "description": "Caked in the same field mud as the study prints; the tread matches exactly.",
+      "location": "garden",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "garden_boots"},
+      "reveals": [{"name": "boot_matches", "args": ["theo", "field_mud"]}]
+    },
+    {
+      "id": "E_WITNESS_MARA",
+      "title": "Mara's Testimony",
+      "description": "Mara admits she saw Bob near the study at the time the clock stopped.",
+      "location": "hall",
+      "requires": ["mara_clock_02"],
+      "discovery": {"kind": "dialogue", "node_id": "mara_clock_02"},
+      "reveals": [{"name": "was_at", "args": ["bob", "study", "21_17"]}],
+      "note": "Testimony, not objective truth: the source is recorded and it only feeds rules alongside other facts."
+    },
+    {
+      "id": "E_CLAIM_THEO",
+      "title": "Theo's Alibi Claim",
+      "description": "Theo insists he was in the garden all evening and never went inside.",
+      "location": "garden",
+      "requires": ["theo_alibi_01"],
+      "discovery": {"kind": "dialogue", "node_id": "theo_alibi_01"},
+      "reveals": [{"name": "claims_at", "args": ["theo", "garden", "21_17"]}],
+      "note": "A claim, not a fact about the world: only usable via the alibi-contradiction rule."
+    },
+    {
+      "id": "E_CLAIM_BOB",
+      "title": "Bob's Alibi Claim",
+      "description": "Bob claims he spent the whole evening in the library.",
+      "location": "library",
+      "requires": ["bob_greet_01"],
+      "discovery": {"kind": "dialogue", "node_id": "bob_greet_01"},
+      "reveals": [{"name": "claims_at", "args": ["bob", "library", "21_17"]}],
+      "note": "A claim, not a fact about the world: only usable via the alibi-contradiction rule."
+    }
+  ]
+}

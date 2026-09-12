@@ -1,0 +1,35 @@
+[project]
+name = "sherlock-ai-backend"
+version = "0.1.0"
+description = "SherlockAI symbolic-AI backend (FastAPI + inference engine)"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn>=0.30",
+  "pydantic>=2.0",
+  "sqlalchemy>=2.0",
+  "networkx>=3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.8",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+# Flat layout holds app/ AND data/: restrict discovery to the package
+# so `pip install -e .` doesn't choke on data/ (setuptools flat-layout
+# discovery treats every top-level dir as a package).
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+# B008 (function calls in defaults) is FastAPI's documented Depends idiom.
+ignore = ["B008"]

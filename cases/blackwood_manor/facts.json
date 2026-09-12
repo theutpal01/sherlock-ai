@@ -1,0 +1,10 @@
+{
+  "comment": "Background the detective knows at case start. Never conclusions, never testimony, never the truth block.",
+  "case_facts": [
+    {"name": "contains", "args": ["study_safe", "diamond"]},
+    {"name": "opens", "args": ["master_key", "study_safe"]},
+    {"name": "opens", "args": ["spare_key", "study_safe"]},
+    {"name": "has_key", "args": ["mara", "master_key"]},
+    {"name": "was_at", "args": ["mara", "hall", "21_17"]}
+  ]
+}

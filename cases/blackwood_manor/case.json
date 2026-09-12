@@ -1,0 +1,20 @@
+{
+  "id": "blackwood_manor",
+  "title": "Blackwood Manor: The Missing Diamond",
+  "description": "A diamond has vanished from the study safe. Three people were in the manor that evening. Examine objects, question the household, and let the evidence — not assumptions — name a suspect.",
+  "version": "0.1.0",
+  "start_location": "entrance",
+  "suspects": ["bob", "mara", "theo"],
+  "truth": {
+    "culprit": "bob",
+    "summary": "Bob, drowning in gambling debts, pocketed the spare safe key from his coat after an earlier errand, waited until the hall was empty, and opened the study safe with the key around 21:17. The undamaged lock, his debts, and Mara's sighting converge on him. Theo's muddy prints are a red herring: he came to the study door to report a broken greenhouse pane, then lied about it out of fear.",
+    "timeline": [
+      "21:00 - Rain begins; garden mud turns fresh and sticky.",
+      "21:05 - Theo crosses the garden in his field boots.",
+      "21:10 - Theo knocks at the study door about the greenhouse pane; no answer; leaves muddy prints.",
+      "21:15 - Mara leaves the hall for the entrance; hears the clock strike the quarter hour.",
+      "21:17 - Bob opens the study safe with the spare key and takes the diamond. The hall clock stops.",
+      "21:20 - Mara returns, sees Bob near the study, says nothing at first."
+    ]
+  }
+}

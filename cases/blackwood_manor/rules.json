@@ -1,0 +1,96 @@
+{
+  "comment": "No rule may conclude guilty(X): possibility is not proof (spec req 10; enforced by the loader).",
+  "rules": [
+    {
+      "id": "R_ACCESS_001",
+      "description": "A person possessing the matching key can access the safe.",
+      "conditions": [
+        {"name": "has_key", "args": ["?person", "?key"]},
+        {"name": "opens", "args": ["?key", "?container"]}
+      ],
+      "conclusion": {"name": "can_access", "args": ["?person", "?container"]}
+    },
+    {
+      "id": "R_TIME_001",
+      "description": "A clock stopped by the disturbance marks the time of the crime.",
+      "conditions": [
+        {"name": "clock_stopped_at", "args": ["?clock", "?time"]}
+      ],
+      "conclusion": {"name": "crime_time", "args": ["?time"]}
+    },
+    {
+      "id": "R_PRINT_001",
+      "description": "Fresh prints of a distinctive mark in a room place the wearer there at the crime time.",
+      "conditions": [
+        {"name": "footprints_in", "args": ["?room", "?mark"]},
+        {"name": "boot_matches", "args": ["?person", "?mark"]},
+        {"name": "crime_time", "args": ["?time"]}
+      ],
+      "conclusion": {"name": "was_at", "args": ["?person", "?room", "?time"]}
+    },
+    {
+      "id": "R_OPP_001",
+      "description": "Presence in the study at the crime time means opportunity.",
+      "conditions": [
+        {"name": "was_at", "args": ["?person", "study", "?time"]},
+        {"name": "crime_time", "args": ["?time"]}
+      ],
+      "conclusion": {"name": "has_opportunity", "args": ["?person"]}
+    },
+    {
+      "id": "R_MOTIVE_001",
+      "description": "Owing money one cannot repay is a motive.",
+      "conditions": [
+        {"name": "owes_money", "args": ["?person", "?creditor"]}
+      ],
+      "conclusion": {"name": "has_motive", "args": ["?person"]}
+    },
+    {
+      "id": "R_ALIBI_THEO",
+      "description": "Claiming the garden while present in the study contradicts the alibi.",
+      "conditions": [
+        {"name": "claims_at", "args": ["?person", "garden", "?time"]},
+        {"name": "was_at", "args": ["?person", "study", "?time"]}
+      ],
+      "conclusion": {"name": "alibi_contradicted", "args": ["?person"]}
+    },
+    {
+      "id": "R_ALIBI_BOB",
+      "description": "Claiming the library while present in the study contradicts the alibi.",
+      "conditions": [
+        {"name": "claims_at", "args": ["?person", "library", "?time"]},
+        {"name": "was_at", "args": ["?person", "study", "?time"]}
+      ],
+      "conclusion": {"name": "alibi_contradicted", "args": ["?person"]}
+    },
+    {
+      "id": "R_SUSPECT_003",
+      "description": "Access plus opportunity plus motive marks a possible suspect — never guilt.",
+      "conditions": [
+        {"name": "can_access", "args": ["?person", "?container"]},
+        {"name": "has_opportunity", "args": ["?person"]},
+        {"name": "has_motive", "args": ["?person"]}
+      ],
+      "conclusion": {"name": "possible_suspect", "args": ["?person"]}
+    },
+    {
+      "id": "R_SUSPECT_004",
+      "description": "A contradicted alibi plus opportunity marks a possible suspect — never guilt.",
+      "conditions": [
+        {"name": "alibi_contradicted", "args": ["?person"]},
+        {"name": "has_opportunity", "args": ["?person"]}
+      ],
+      "conclusion": {"name": "possible_suspect", "args": ["?person"]}
+    },
+    {
+      "id": "R_MEANS_001",
+      "description": "A lock opened with a key implicates whoever holds a matching key.",
+      "conditions": [
+        {"name": "opened_with_key", "args": ["?container"]},
+        {"name": "has_key", "args": ["?person", "?key"]},
+        {"name": "opens", "args": ["?key", "?container"]}
+      ],
+      "conclusion": {"name": "had_means", "args": ["?person", "?container"]}
+    }
+  ]
+}

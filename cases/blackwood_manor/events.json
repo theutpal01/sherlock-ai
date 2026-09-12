@@ -1,0 +1,17 @@
+{
+  "comment": "Deterministic world events (case clock / event counter, not wall-clock). Consumed by the world service in Phase 5; validated for reference integrity in Phase 2.",
+  "events": [
+    {
+      "id": "EVT_MARA_RELOCATE",
+      "description": "After the stopped clock is found, Mara withdraws to the library and will talk there.",
+      "trigger": {"type": "evidence_discovered", "evidence": "E_CLOCK"},
+      "effect": {"type": "move_npc", "npc": "mara", "to": "library"}
+    },
+    {
+      "id": "EVT_THEO_CONFRONT",
+      "description": "After the muddy prints are found, Theo slips into the hall, afraid of what they mean.",
+      "trigger": {"type": "evidence_discovered", "evidence": "E_MUD"},
+      "effect": {"type": "move_npc", "npc": "theo", "to": "hall"}
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "rooms": [
+    {
+      "id": "foyer",
+      "name": "Foyer",
+      "description": "A marble foyer littered with discarded programmes. Rain streaks the glass doors.",
+      "adjacent": ["auditorium", "alley"],
+      "spawn": [96, 224]
+    },
+    {
+      "id": "auditorium",
+      "name": "Auditorium",
+      "description": "Rows of empty velvet seats facing a dark curtain.",
+      "adjacent": ["foyer", "stage"],
+      "spawn": [480, 240]
+    },
+    {
+      "id": "stage",
+      "name": "Stage",
+      "description": "Boards dusted with rosin. Crates stand half-unloaded in the wings.",
+      "adjacent": ["auditorium", "dressing", "alley"],
+      "spawn": [480, 160]
+    },
+    {
+      "id": "dressing",
+      "name": "Dressing Room",
+      "description": "Mirrors ringed with bulbs. The wall safe hangs open; the violin is gone.",
+      "adjacent": ["stage"],
+      "spawn": [720, 160]
+    },
+    {
+      "id": "alley",
+      "name": "Stage Alley",
+      "description": "A narrow rain-slicked alley behind the theatre. Work boots wait by the stage door.",
+      "adjacent": ["foyer", "stage"],
+      "spawn": [480, 400]
+    }
+  ]
+}

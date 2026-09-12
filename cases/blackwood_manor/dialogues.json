@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "mara_clock_01",
+      "speaker": "mara",
+      "requires": ["E_CLOCK"],
+      "text": "I heard the clock stop shortly after I left the hall.",
+      "responses": [{"text": "Where did you go next?", "next": "mara_clock_02"}]
+    },
+    {
+      "id": "mara_clock_02",
+      "speaker": "mara",
+      "requires": ["mara_clock_01"],
+      "text": "Back to the entrance for a cloth. And on my way... I saw Mr. Bob near the study. I said nothing at first. Forgive me.",
+      "responses": [{"text": "Thank you, Mara.", "next": "mara_hall_02"}]
+    },
+    {
+      "id": "mara_hall_02",
+      "speaker": "mara",
+      "requires": ["mara_clock_02"],
+      "text": "Poor Mr. Bob. Debts or no debts, I've known him since he was small. ...Do what you must, detective.",
+      "responses": []
+    },
+    {
+      "id": "theo_alibi_01",
+      "speaker": "theo",
+      "requires": [],
+      "text": "I was in the garden all evening. Never went inside, I swear it.",
+      "responses": [{"text": "What about the mud on your boots?", "next": "theo_alley_02"}]
+    },
+    {
+      "id": "theo_alley_02",
+      "speaker": "theo",
+      "requires": ["theo_alibi_01"],
+      "text": "All right — I stepped to the study door, once! The greenhouse pane was broke and I wanted to report it. Nobody answered. That's all, I swear on my mother's grave.",
+      "responses": []
+    },
+    {
+      "id": "bob_greet_01",
+      "speaker": "bob",
+      "requires": [],
+      "text": "This is harassment. I spent the whole evening in the library, ask anyone.",
+      "responses": [{"text": "Your coat was in the entrance.", "next": "bob_greet_02"}]
+    },
+    {
+      "id": "bob_greet_02",
+      "speaker": "bob",
+      "requires": ["bob_greet_01"],
+      "text": "My coat? Anyone could have... look, I lend things. Ask Mara about her precious keys instead of hounding me.",
+      "responses": []
+    }
+  ]
+}

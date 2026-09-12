@@ -1,0 +1,37 @@
+{
+  "npcs": [
+    {
+      "id": "bob",
+      "name": "Bob Ashworth",
+      "role": "Nephew of Lord Blackwood",
+      "location": "library",
+      "description": "A nervous young gentleman with ink on his cuffs."
+    },
+    {
+      "id": "mara",
+      "name": "Mara Voss",
+      "role": "Housekeeper",
+      "location": "hall",
+      "description": "Keeps the master key on her belt and misses nothing."
+    },
+    {
+      "id": "theo",
+      "name": "Theo Gard",
+      "role": "Gardener",
+      "location": "garden",
+      "description": "Mud to the knees; avoids meeting your eye."
+    }
+  ],
+  "objects": [
+    {"id": "grandfather_clock", "room": "hall", "label": "Grandfather clock", "evidence": "E_CLOCK"},
+    {"id": "study_safe", "room": "study", "label": "Wall safe", "evidence": "E_SAFE"},
+    {"id": "safe_lock", "room": "study", "label": "Safe lock (look closer)", "evidence": "E_LOCK"},
+    {"id": "bobs_coat", "room": "entrance", "label": "Bob's coat", "evidence": "E_COAT"},
+    {"id": "torn_letter", "room": "library", "label": "Torn letter", "evidence": "E_LETTER"},
+    {"id": "muddy_prints", "room": "study", "label": "Muddy footprints", "evidence": "E_MUD"},
+    {"id": "garden_boots", "room": "garden", "label": "Field boots", "evidence": "E_BOOTS"}
+  ],
+  "doors": [
+    {"id": "study_door", "between": ["hall", "study"], "locked": false, "note": "Unlocked in v1; lock mechanics arrive with the world-state service."}
+  ]
+}

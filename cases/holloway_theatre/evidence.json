@@ -1,0 +1,90 @@
+{
+  "evidence": [
+    {
+      "id": "E_BELL",
+      "title": "Call Bell Log",
+      "description": "The call bell rang once at twenty minutes to nine — 20:40.",
+      "location": "stage",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "call_bell"},
+      "reveals": [{"name": "bell_rang", "args": ["call_bell", "20_40"]}]
+    },
+    {
+      "id": "E_SAFE",
+      "title": "Open Dressing Safe",
+      "description": "The safe hangs open. The violin is gone — and the lock is unmarked: whoever opened it had a key.",
+      "location": "dressing",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "violin_case"},
+      "reveals": [
+        {"name": "opened_with_key", "args": ["dressing_safe"]}
+      ]
+    },
+    {
+      "id": "E_PROGRAMME",
+      "title": "Spare Key in Vera's Programme",
+      "description": "Tucked inside Vera's discarded programme: a spare safe key.",
+      "location": "foyer",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "veras_programme"},
+      "reveals": [{"name": "has_key", "args": ["vera", "spare_key"]}]
+    },
+    {
+      "id": "E_DEBTS",
+      "title": "Torn IOU",
+      "description": "Only after seeing the empty safe do you think to search the desk: an IOU in Vera's hand. She owes Marlow more than a season's wages.",
+      "location": "dressing",
+      "requires": ["E_SAFE"],
+      "discovery": {"kind": "interact", "object_id": "gambling_iou"},
+      "reveals": [{"name": "owes_money", "args": ["vera", "marlow"]}]
+    },
+    {
+      "id": "E_ROSIN",
+      "title": "Rosin Trail",
+      "description": "A fresh trail of rosin dust crosses the stage to the wings and back.",
+      "location": "stage",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "rosin_dust"},
+      "reveals": [{"name": "dust_in", "args": ["stage", "rosin_dust"]}]
+    },
+    {
+      "id": "E_BOOTS",
+      "title": "Otto's Work Boots",
+      "description": "Caked in the same rosin dust as the stage trail; the tread matches exactly.",
+      "location": "alley",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "work_boots"},
+      "reveals": [{"name": "boot_matches", "args": ["otto", "rosin_dust"]}]
+    },
+    {
+      "id": "E_WITNESS_NELL",
+      "title": "Nell's Testimony",
+      "description": "Nell admits she saw Vera inside the dressing room as the bell rang.",
+      "location": "stage",
+      "requires": ["nell_bell_02"],
+      "discovery": {"kind": "dialogue", "node_id": "nell_bell_02"},
+      "reveals": [{"name": "was_at", "args": ["vera", "dressing", "20_40"]}],
+      "note": "Testimony, not objective truth: the source is recorded and it only feeds rules alongside other facts."
+    },
+    {
+      "id": "E_CLAIM_OTTO",
+      "title": "Otto's Alibi Claim",
+      "description": "Otto insists he spent the whole evening in the alley and never went inside.",
+      "location": "alley",
+      "requires": ["otto_alley_01"],
+      "discovery": {"kind": "dialogue", "node_id": "otto_alley_01"},
+      "reveals": [{"name": "claims_at", "args": ["otto", "alley", "20_40"]}],
+      "note": "A claim, not a fact about the world: only usable via the alibi-contradiction rule."
+    },
+    {
+      "id": "E_CLAIM_VERA",
+      "title": "Vera's Alibi Claim",
+      "description": "Vera claims she spent the entire intermission in the auditorium.",
+      "location": "auditorium",
+      "requires": ["vera_greet_01"],
+      "discovery": {"kind": "dialogue", "node_id": "vera_greet_01"},
+      "reveals": [{"name": "claims_at", "args": ["vera", "auditorium", "20_40"]}],
+      "note": "A claim, not a fact about the world: only usable via the alibi-contradiction rule."
+    }
+  ]
+}

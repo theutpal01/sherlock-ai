@@ -1,0 +1,46 @@
+{
+  "rooms": [
+    {
+      "id": "entrance",
+      "name": "Entrance",
+      "description": "A cold stone foyer. Coats hang by the door; rain drums against the windows.",
+      "adjacent": ["corridor"],
+      "spawn": [96, 224]
+    },
+    {
+      "id": "corridor",
+      "name": "Corridor",
+      "description": "A long carpeted corridor linking the manor's ground-floor rooms.",
+      "adjacent": ["entrance", "library", "hall", "garden"],
+      "spawn": [480, 240]
+    },
+    {
+      "id": "library",
+      "name": "Library",
+      "description": "Shelves of ledgers and novels. A writing desk drawers shut, and a torn letter lies near the armchair.",
+      "adjacent": ["corridor"],
+      "spawn": [240, 160]
+    },
+    {
+      "id": "hall",
+      "name": "Great Hall",
+      "description": "A vaulted hall dominated by a tall grandfather clock, its pendulum still.",
+      "adjacent": ["corridor", "study"],
+      "spawn": [480, 160]
+    },
+    {
+      "id": "study",
+      "name": "Study",
+      "description": "Lord Blackwood's study. The wall safe hangs open; muddy prints mark the rug.",
+      "adjacent": ["hall"],
+      "spawn": [720, 160]
+    },
+    {
+      "id": "garden",
+      "name": "Garden",
+      "description": "A rain-soaked kitchen garden. Mud clings to everything; a pair of field boots waits by the shed.",
+      "adjacent": ["corridor"],
+      "spawn": [480, 400]
+    }
+  ]
+}

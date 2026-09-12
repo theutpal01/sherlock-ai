@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "nell_bell_01",
+      "speaker": "nell",
+      "requires": ["E_BELL"],
+      "text": "The call bell rang just as I left the stage. You can check the log.",
+      "responses": [{"text": "Where did you go next?", "next": "nell_bell_02"}]
+    },
+    {
+      "id": "nell_bell_02",
+      "speaker": "nell",
+      "requires": ["nell_bell_01"],
+      "text": "Past the dressing room, for a costume check. And Miss Vera was inside. I thought nothing of it — until now.",
+      "responses": [{"text": "We'll find it, Nell.", "next": "nell_foyer_02"}]
+    },
+    {
+      "id": "nell_foyer_02",
+      "speaker": "nell",
+      "requires": ["nell_bell_02"],
+      "text": "Twenty years I've run this theatre and never lost so much as a prop spoon. Find that violin, detective. Please.",
+      "responses": []
+    },
+    {
+      "id": "otto_alley_01",
+      "speaker": "otto",
+      "requires": [],
+      "text": "Me? Alley all night, hauling crates. Never went inside, swear it.",
+      "responses": [{"text": "And the rosin on your boots?", "next": "otto_alley_02"}]
+    },
+    {
+      "id": "otto_alley_02",
+      "speaker": "otto",
+      "requires": ["otto_alley_01"],
+      "text": "Fine! I crossed the stage with crates, all right? Twenty-five crates before curtain. Snoop all you want — you'll find sweat and sawdust.",
+      "responses": []
+    },
+    {
+      "id": "vera_greet_01",
+      "speaker": "vera",
+      "requires": [],
+      "text": "I was in the auditorium the entire intermission, darling. Ask anyone.",
+      "responses": [{"text": "Your programme was in the foyer.", "next": "vera_greet_02"}]
+    },
+    {
+      "id": "vera_greet_02",
+      "speaker": "vera",
+      "requires": ["vera_greet_01"],
+      "text": "My programme? I lose programmes the way other women lose gloves. If you found it, keep it — a souvenir of the night my violin vanished.",
+      "responses": []
+    }
+  ]
+}
