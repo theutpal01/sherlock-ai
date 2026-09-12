@@ -10,6 +10,7 @@ const rooms: CaseLayout['rooms'] = [
   { id: 'hall', name: 'Great Hall', x: 800, y: 560, w: ROOM_W, h: ROOM_H, floorStyle: 'carpet', wallStyle: 'wood', decor: [{ tex: 'furn-mirror', x: 1250, y: 650, scale: 2 }, { tex: 'furn-rug', x: 1120, y: 300, scale: 1.5 }, { tex: 'furn-plant', x: 860, y: 660, scale: 2 }] },
   { id: 'study', name: 'Study', x: 1560, y: 560, w: ROOM_W, h: ROOM_H, floorStyle: 'wood', wallStyle: 'wood', decor: [{ tex: 'furn-desk', x: 1650, y: 150, scale: 2 }, { tex: 'furn-lamp', x: 1600, y: 300, scale: 1.5 }, { tex: 'furn-rug', x: 1880, y: 280, scale: 1.5 }] },
   { id: 'garden', name: 'Garden', x: 800, y: 1080, w: ROOM_W, h: ROOM_H, floorStyle: 'grass', wallStyle: 'hedge', decor: [{ tex: 'furn-shelf', x: 950, y: 1150, scale: 2 }, { tex: 'furn-plant', x: 850, y: 1300, scale: 2 }, { tex: 'furn-plant', x: 1250, y: 1250, scale: 2 }] },
+  { id: 'cellar', name: 'Wine Cellar', x: 40, y: 560, w: ROOM_W, h: ROOM_H, floorStyle: 'stone', wallStyle: 'stone', decor: [{ tex: 'furn-shelf', x: 400, y: 700, scale: 2 }] },
 ];
 
 export const blackwoodLayout: CaseLayout = {
@@ -29,6 +30,8 @@ export const blackwoodLayout: CaseLayout = {
     { id: 'D_HALL_STU', roomId: 'hall', label: '→ Study', x: 1408, y: 734, w: 48, h: 72, targetRoomId: 'study' },
     { id: 'D_STU_HALL', roomId: 'study', label: '→ Great Hall', x: 1544, y: 734, w: 48, h: 72, targetRoomId: 'hall' },
     { id: 'D_GAR_CORR', roomId: 'garden', label: '→ Corridor', x: 1084, y: 1080, w: 72, h: 48, targetRoomId: 'corridor' },
+    { id: 'D_HALL_CEL', roomId: 'hall', label: '→ Cellar', x: 784, y: 734, w: 48, h: 72, targetRoomId: 'cellar' },
+    { id: 'D_CEL_HALL', roomId: 'cellar', label: '→ Great Hall', x: 616, y: 734, w: 48, h: 72, targetRoomId: 'hall' },
   ],
   objects: [
     { id: 'bobs_coat', roomId: 'entrance', label: "Bob's coat", x: 200, y: 300, radius: 64, sprite: { kind: 'image', key: 'furn-wardrobe' }, scale: 2, evidence: 'E_COAT' },
@@ -38,6 +41,7 @@ export const blackwoodLayout: CaseLayout = {
     { id: 'safe_lock', roomId: 'study', label: 'Safe lock (look closer)', x: 1870, y: 650, radius: 60, sprite: { kind: 'frame', frame: 89 }, scale: 2, evidence: 'E_LOCK' },
     { id: 'muddy_prints', roomId: 'study', label: 'Muddy footprints', x: 1700, y: 850, radius: 64, sprite: { kind: 'texture', key: 'spr-prints' }, scale: 2.5, evidence: 'E_MUD' },
     { id: 'garden_boots', roomId: 'garden', label: 'Field boots', x: 950, y: 1300, radius: 64, sprite: { kind: 'texture', key: 'spr-boots' }, scale: 2.5, evidence: 'E_BOOTS' },
+    { id: 'butlers_candle', roomId: 'cellar', label: 'Burnt candle stub', x: 200, y: 850, radius: 64, sprite: { kind: 'texture', key: 'spr-candle' }, scale: 2.5, evidence: 'E_CANDLE' },
   ],
   npcSpots: {
     entrance: [
@@ -63,6 +67,10 @@ export const blackwoodLayout: CaseLayout = {
     garden: [
       { x: 1250, y: 1200 },
       { x: 950, y: 1350 },
+    ],
+    cellar: [
+      { x: 300, y: 700 },
+      { x: 500, y: 850 },
     ],
   },
   worldW: 2240,

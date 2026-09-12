@@ -24,7 +24,12 @@ def _locations(world: dict) -> dict:
 
 def test_initial_world_matches_case_data(client: TestClient):
     world = _world(client, _new_session(client))
-    assert _locations(world) == {"bob": "library", "mara": "hall", "theo": "garden"}
+    assert _locations(world) == {
+        "bob": "library",
+        "mara": "hall",
+        "theo": "garden",
+        "grey": "cellar",
+    }
     assert world["events_fired"] == []
     assert world["event_counter"] == 0
 
@@ -45,7 +50,44 @@ def test_mud_discovery_brings_theo_inside(client: TestClient):
     assert client.post(f"/sessions/{sid}/interactions/muddy_prints").status_code == 200
     world = _world(client, sid)
     assert world["events_fired"] == ["EVT_MARA_RELOCATE", "EVT_THEO_CONFRONT"]
-    assert _locations(world) == {"bob": "library", "mara": "library", "theo": "hall"}
+    assert _locations(world) == {
+        "bob": "library",
+        "mara": "library",
+        "theo": "hall",
+        "grey": "cellar",
+    }
+
+
+def test_safe_discovery_summons_grey_then_testimony_exonerates(client: TestClient):
+    sid = _new_session(client)
+    assert client.post(f"/sessions/{sid}/interactions/study_safe").status_code == 200
+    world = _world(client, sid)
+    assert "EVT_GREY_SUMMONED" in world["events_fired"]
+    assert _locations(world)["grey"] == "hall"
+    # Grey talks freely: no prerequisite on his opener.
+    assert (
+        client.post(f"/sessions/{sid}/dialogue", json={"node_id": "grey_cellar_01"}).status_code
+        == 200
+    )
+    assert (
+        client.post(f"/sessions/{sid}/dialogue", json={"node_id": "grey_cellar_02"}).status_code
+        == 200
+    )
+    knowledge = client.get(f"/sessions/{sid}/knowledge").json()
+    known = {(f["name"], tuple(f["args"])) for f in knowledge["known"]}
+    assert ("claims_at", ("grey", "cellar", "21_17")) in known
+    # Candle + clock place him in the cellar; still never a suspect.
+    client.post(f"/sessions/{sid}/interactions/butlers_candle")
+    client.post(f"/sessions/{sid}/interactions/grandfather_clock")
+    knowledge = client.get(f"/sessions/{sid}/knowledge").json()
+    derived = {(d["fact"]["name"], tuple(d["fact"]["args"])) for d in knowledge["derived"]}
+    assert ("was_at", ("grey", "cellar", "21_17")) in {
+        (f["name"], tuple(f["args"])) for f in knowledge["known"]
+    } | derived
+    assert not any(
+        d["fact"]["name"] == "possible_suspect" and d["fact"]["args"] == ["grey"]
+        for d in knowledge["derived"]
+    )
 
 
 def test_world_is_deterministic_across_sessions(client: TestClient):

@@ -25,7 +25,7 @@
       "id": "hall",
       "name": "Great Hall",
       "description": "A vaulted hall dominated by a tall grandfather clock, its pendulum still.",
-      "adjacent": ["corridor", "study"],
+      "adjacent": ["corridor", "study", "cellar"],
       "spawn": [480, 160]
     },
     {
@@ -41,6 +41,13 @@
       "description": "A rain-soaked kitchen garden. Mud clings to everything; a pair of field boots waits by the shed.",
       "adjacent": ["corridor"],
       "spawn": [480, 400]
+    },
+    {
+      "id": "cellar",
+      "name": "Wine Cellar",
+      "description": "Cool stone vaults lined with casks. A candle stub gutters on an upturned crate.",
+      "adjacent": ["hall"],
+      "spawn": [320, 200]
     }
   ]
 }

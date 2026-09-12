@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 
 export type FloorStyle = 'stone' | 'wood' | 'grass' | 'carpet';
-export type WallStyle = 'wood' | 'hedge';
+export type WallStyle = 'wood' | 'hedge' | 'stone';
 
 /** Honor reduced-motion: ambient loops and squash effects switch off. */
 export const REDUCED_MOTION =
@@ -28,7 +28,17 @@ export const FRAMES = {
 } as const;
 
 /** Character sheets (Svetlana Kushnariova, CC-BY 3.0): 24x32 grid. */
-export const CHAR_IDS = ['player', 'bob', 'mara', 'theo', 'vera', 'otto', 'nell'] as const;
+export const CHAR_IDS = [
+  'player',
+  'bob',
+  'mara',
+  'theo',
+  'vera',
+  'otto',
+  'nell',
+  'grey',
+  'kit',
+] as const;
 
 /** Walk frames per direction on a 24x32 sheet (verified against renders:
  *  row 0 = back/up, row 1 = left profile, row 2 = right profile,
@@ -145,6 +155,15 @@ function paintHedge(gfx: Phaser.GameObjects.Graphics): void {
   gfx.fillStyle(0x3a7046, 1).fillCircle(14, 14, 2).fillCircle(34, 30, 2);
 }
 
+function paintStoneWall(gfx: Phaser.GameObjects.Graphics): void {
+  // Cool ashlar masonry for the cellar vaults.
+  gfx.fillStyle(0x3f3d3a, 1).fillRect(0, 0, TILE, TILE);
+  gfx.lineStyle(2, 0x232120, 1);
+  gfx.lineBetween(0, 16, TILE, 16).lineBetween(0, 32, TILE, 32);
+  gfx.lineBetween(24, 0, 24, 16).lineBetween(12, 16, 12, 32).lineBetween(36, 16, 36, 32);
+  gfx.lineBetween(24, 32, 24, TILE).lineBetween(12, 32, 12, TILE).lineBetween(36, 32, 36, TILE);
+}
+
 function paintPrints(gfx: Phaser.GameObjects.Graphics): void {
   gfx.fillStyle(0x1c1410, 1);
   gfx.fillCircle(4, 8, 2).fillCircle(9, 5, 2).fillCircle(11, 10, 2);
@@ -160,6 +179,19 @@ function paintClock(gfx: Phaser.GameObjects.Graphics): void {
 function paintBoots(gfx: Phaser.GameObjects.Graphics): void {
   gfx.fillStyle(0x5a3a1e, 1).fillRect(1, 4, 5, 8).fillRect(8, 4, 5, 8);
   gfx.fillStyle(0x2e2013, 1).fillRect(1, 10, 5, 2).fillRect(8, 10, 5, 2);
+}
+
+function paintCandle(gfx: Phaser.GameObjects.Graphics): void {
+  gfx.fillStyle(0xe8dcc0, 1).fillRect(6, 5, 4, 9);
+  gfx.fillStyle(0x8a6f3c, 1).fillRect(6, 12, 4, 2);
+  gfx.fillStyle(0xffb340, 1).fillCircle(8, 3, 2);
+  gfx.fillStyle(0xfff3c4, 1).fillCircle(8, 3, 1);
+}
+
+function paintCurtain(gfx: Phaser.GameObjects.Graphics): void {
+  gfx.fillStyle(0x7a1f1f, 1).fillRect(2, 0, 10, 12);
+  gfx.fillStyle(0x933030, 1).fillRect(4, 0, 2, 12).fillRect(8, 0, 2, 12);
+  gfx.fillStyle(0xc9a227, 1).fillRect(2, 10, 10, 2);
 }
 
 /** Single source of truth for composed tile keys (scene must use these). */
@@ -189,9 +221,12 @@ export function ensureArt(scene: Phaser.Scene): void {
   bake('tile-floor-carpet', TILE, TILE, paintCarpet);
   bake('tile-wall-wood', TILE, TILE, paintWoodWall);
   bake('tile-wall-hedge', TILE, TILE, paintHedge);
+  bake('tile-wall-stone', TILE, TILE, paintStoneWall);
   bake('spr-prints', 14, 12, paintPrints);
   bake('spr-clock', 16, 16, paintClock);
   bake('spr-boots', 14, 12, paintBoots);
+  bake('spr-candle', 16, 16, paintCandle);
+  bake('spr-curtain', 14, 12, paintCurtain);
   if (!tex.exists('fx-dot')) {
     const gfx = scene.make.graphics({ x: 0, y: 0 }, false);
     gfx.fillStyle(0xfde68a, 1).fillCircle(4, 4, 4);

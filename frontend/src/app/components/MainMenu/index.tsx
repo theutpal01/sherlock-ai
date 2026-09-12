@@ -1,7 +1,7 @@
 import type { CaseSummary } from '../../../api/client';
 import { portrait } from '../../../game/art';
 
-const CAST_PORTRAITS = ['player', 'bob', 'mara', 'theo', 'vera', 'otto', 'nell'];
+const CAST_PORTRAITS = ['player', 'bob', 'mara', 'theo', 'vera', 'otto', 'nell', 'grey', 'kit'];
 
 export interface CaseProgress {
   caseId: string;

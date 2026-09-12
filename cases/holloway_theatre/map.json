@@ -18,7 +18,7 @@
       "id": "stage",
       "name": "Stage",
       "description": "Boards dusted with rosin. Crates stand half-unloaded in the wings.",
-      "adjacent": ["auditorium", "dressing", "alley"],
+      "adjacent": ["auditorium", "dressing", "alley", "workshop"],
       "spawn": [480, 160]
     },
     {
@@ -34,6 +34,13 @@
       "description": "A narrow rain-slicked alley behind the theatre. Work boots wait by the stage door.",
       "adjacent": ["foyer", "stage"],
       "spawn": [480, 400]
+    },
+    {
+      "id": "workshop",
+      "name": "Workshop",
+      "description": "A cramped workroom smelling of sawdust and greasepaint. A mended curtain panel hangs over a chair.",
+      "adjacent": ["stage"],
+      "spawn": [320, 200]
     }
   ]
 }

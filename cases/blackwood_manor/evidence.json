@@ -92,6 +92,28 @@
       "discovery": {"kind": "dialogue", "node_id": "bob_greet_01"},
       "reveals": [{"name": "claims_at", "args": ["bob", "library", "21_17"]}],
       "note": "A claim, not a fact about the world: only usable via the alibi-contradiction rule."
+    },
+    {
+      "id": "E_CANDLE",
+      "title": "Burnt Candle Stub",
+      "description": "A candle stub burnt nearly to nothing, Grey's initials carved in the wax.",
+      "location": "cellar",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "butlers_candle"},
+      "reveals": [
+        {"name": "burnt_low", "args": ["cellar_candle"]},
+        {"name": "marked", "args": ["cellar_candle", "grey"]}
+      ]
+    },
+    {
+      "id": "E_CLAIM_GREY",
+      "title": "Grey's Alibi Claim",
+      "description": "Grey states he spent the whole evening drawing wine in the cellar.",
+      "location": "cellar",
+      "requires": ["grey_cellar_01"],
+      "discovery": {"kind": "dialogue", "node_id": "grey_cellar_01"},
+      "reveals": [{"name": "claims_at", "args": ["grey", "cellar", "21_17"]}],
+      "note": "A claim, not a fact about the world: only usable via the alibi-contradiction rule."
     }
   ]
 }

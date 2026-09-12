@@ -20,8 +20,16 @@ OBJECTS = (
     "gambling_iou",
     "rosin_dust",
     "work_boots",
+    "mended_curtain",
 )
-NODES = ("nell_bell_01", "nell_bell_02", "otto_alley_01", "vera_greet_01")
+NODES = (
+    "nell_bell_01",
+    "nell_bell_02",
+    "otto_alley_01",
+    "vera_greet_01",
+    "kit_work_01",
+    "kit_work_02",
+)
 
 
 def test_case_loads_with_zero_validation_errors():
@@ -33,7 +41,7 @@ def test_case_loads_with_zero_validation_errors():
 def test_case_meets_vertical_slice_minimums():
     case = load_case(CASE_DIR)
     assert len(case.rooms) >= 5
-    assert len(case.npcs) == 3
+    assert len(case.npcs) == 4
     assert len(case.evidence) >= 5
     assert 8 <= len(case.case_facts) + sum(len(e.reveals) for e in case.evidence) <= 20
     # Second case runs slightly larger (dual opportunity rules + means rule);
@@ -43,13 +51,14 @@ def test_case_meets_vertical_slice_minimums():
 
 def test_dialogue_trees_are_complete_chains():
     case = load_case(CASE_DIR)
-    assert len(case.dialogues) == 7
+    assert len(case.dialogues) == 9
     by_id = {node.id: node for node in case.dialogues}
     for opener, follow in (
         ("nell_bell_01", "nell_bell_02"),
         ("nell_bell_02", "nell_foyer_02"),
         ("otto_alley_01", "otto_alley_02"),
         ("vera_greet_01", "vera_greet_02"),
+        ("kit_work_01", "kit_work_02"),
     ):
         assert follow in by_id
         assert opener in by_id[follow].requires
@@ -78,6 +87,9 @@ def test_full_discovery_names_vera_and_otto():
     assert kb.contains(Predicate("possible_suspect", ("vera",)))
     assert kb.contains(Predicate("possible_suspect", ("otto",)))
     assert not kb.contains(Predicate("possible_suspect", ("nell",)))
+    # Kit's mending places him in the workshop: exonerated, never a suspect.
+    assert kb.contains(Predicate("was_at", ("kit", "workshop", "20_40")))
+    assert not kb.contains(Predicate("possible_suspect", ("kit",)))
     assert not kb.contains(Predicate("guilty", ("vera",)))
 
 
@@ -103,4 +115,4 @@ def test_full_walkthrough_accuses_vera(client: TestClient):
     assert {"E_PROGRAMME", "E_WITNESS_NELL", "E_BELL", "E_DEBTS"} <= supporting
     world = client.get(f"/sessions/{sid}/world").json()
     locations = {npc["id"]: npc["location"] for npc in world["npcs"]}
-    assert locations == {"vera": "auditorium", "nell": "foyer", "otto": "stage"}
+    assert locations == {"vera": "auditorium", "nell": "foyer", "otto": "stage", "kit": "foyer"}

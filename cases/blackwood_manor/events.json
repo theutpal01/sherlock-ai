@@ -12,6 +12,12 @@
       "description": "After the muddy prints are found, Theo slips into the hall, afraid of what they mean.",
       "trigger": {"type": "evidence_discovered", "evidence": "E_MUD"},
       "effect": {"type": "move_npc", "npc": "theo", "to": "hall"}
+    },
+    {
+      "id": "EVT_GREY_SUMMONED",
+      "description": "After the open safe is found, Grey is summoned upstairs and waits in the hall.",
+      "trigger": {"type": "evidence_discovered", "evidence": "E_SAFE"},
+      "effect": {"type": "move_npc", "npc": "grey", "to": "hall"}
     }
   ]
 }

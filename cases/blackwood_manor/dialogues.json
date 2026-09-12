@@ -48,6 +48,20 @@
       "requires": ["bob_greet_01"],
       "text": "My coat? Anyone could have... look, I lend things. Ask Mara about her precious keys instead of hounding me.",
       "responses": []
+    },
+    {
+      "id": "grey_cellar_01",
+      "speaker": "grey",
+      "requires": [],
+      "text": "Drawing wine in the cellar all evening, detective. My candle burned near to nothing down there.",
+      "responses": [{"text": "Anyone to vouch for that?", "next": "grey_cellar_02"}]
+    },
+    {
+      "id": "grey_cellar_02",
+      "speaker": "grey",
+      "requires": ["grey_cellar_01"],
+      "text": "Only the casks, sir. But mark me — the master key never leaves Mara's belt. I saw it there at supper.",
+      "responses": []
     }
   ]
 }

@@ -20,6 +20,13 @@
       "role": "Stagehand",
       "location": "alley",
       "description": "Broad-shouldered, rosin to the elbows; will not meet your eye."
+    },
+    {
+      "id": "kit",
+      "name": "Kit Bell",
+      "role": "Callboy",
+      "location": "workshop",
+      "description": "Young, quick, forever mending something."
     }
   ],
   "objects": [
@@ -28,9 +35,11 @@
     {"id": "veras_programme", "room": "foyer", "label": "Vera's programme", "evidence": "E_PROGRAMME"},
     {"id": "gambling_iou", "room": "dressing", "label": "Torn IOU", "evidence": "E_DEBTS"},
     {"id": "rosin_dust", "room": "stage", "label": "Rosin dust", "evidence": "E_ROSIN"},
-    {"id": "work_boots", "room": "alley", "label": "Work boots", "evidence": "E_BOOTS"}
+    {"id": "work_boots", "room": "alley", "label": "Work boots", "evidence": "E_BOOTS"},
+    {"id": "mended_curtain", "room": "workshop", "label": "Mended curtain panel", "evidence": "E_CURTAIN"}
   ],
   "doors": [
-    {"id": "stage_door", "between": ["stage", "dressing"], "locked": false, "note": "Unlocked in v1; lock mechanics are a future milestone."}
+    {"id": "stage_door", "between": ["stage", "dressing"], "locked": false, "note": "Unlocked in v1; lock mechanics are a future milestone."},
+    {"id": "workshop_door", "between": ["stage", "workshop"], "locked": false, "note": "Paint-spattered door behind the wings."}
   ]
 }

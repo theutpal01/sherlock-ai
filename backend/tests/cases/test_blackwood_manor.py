@@ -29,11 +29,12 @@ def test_case_loads_with_zero_validation_errors():
 def test_case_meets_vertical_slice_minimums():
     case = _load()
     room_ids = {r.id for r in case.rooms}
-    assert {"entrance", "corridor", "library", "hall", "study", "garden"} <= room_ids
-    assert len(case.npcs) == 3
+    assert {"entrance", "corridor", "library", "hall", "study", "garden", "cellar"} <= room_ids
+    assert len(case.npcs) == 4
     assert len(case.evidence) >= 5
     assert 8 <= len(case.case_facts) + sum(len(e.reveals) for e in case.evidence) <= 20
-    assert 5 <= len(case.rules) <= 10
+    # The cellar wing added one rule past the original 5-10 guideline.
+    assert 5 <= len(case.rules) <= 12
 
 
 def test_initial_kb_holds_no_suspect_and_no_truth():
@@ -70,6 +71,9 @@ def test_full_discovery_yields_two_plausible_suspects():
     assert kb.contains(Predicate("possible_suspect", ("theo",)))
     # Mara has access but no opportunity: correctly excluded.
     assert not kb.contains(Predicate("possible_suspect", ("mara",)))
+    # Grey's candle places him in the cellar: exonerated, never a suspect.
+    assert kb.contains(Predicate("was_at", ("grey", "cellar", "21_17")))
+    assert not kb.contains(Predicate("possible_suspect", ("grey",)))
     # Possibility is never proof.
     for person in ("bob", "theo", "mara"):
         assert not kb.contains(Predicate("guilty", (person,)))
@@ -94,7 +98,7 @@ def test_prerequisite_gating():
 
 def test_dialogue_trees_are_complete_chains():
     case = _load()
-    assert len(case.dialogues) == 7
+    assert len(case.dialogues) == 9
     by_id = {node.id: node for node in case.dialogues}
     # Follow-ups chain off their openers and every response resolves.
     for opener, follow in (
@@ -102,6 +106,7 @@ def test_dialogue_trees_are_complete_chains():
         ("mara_clock_02", "mara_hall_02"),
         ("theo_alibi_01", "theo_alley_02"),
         ("bob_greet_01", "bob_greet_02"),
+        ("grey_cellar_01", "grey_cellar_02"),
     ):
         assert follow in by_id
         assert opener in by_id[follow].requires
@@ -118,4 +123,6 @@ def test_dialogue_trees_are_complete_chains():
         "E_WITNESS_MARA",
         "E_CLAIM_THEO",
         "E_CLAIM_BOB",
+        "E_CANDLE",
+        "E_CLAIM_GREY",
     }

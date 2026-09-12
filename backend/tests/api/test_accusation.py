@@ -14,8 +14,16 @@ OBJECTS = (
     "torn_letter",
     "muddy_prints",
     "garden_boots",
+    "butlers_candle",
 )
-NODES = ("mara_clock_01", "mara_clock_02", "theo_alibi_01", "bob_greet_01")
+NODES = (
+    "mara_clock_01",
+    "mara_clock_02",
+    "theo_alibi_01",
+    "bob_greet_01",
+    "grey_cellar_01",
+    "grey_cellar_02",
+)
 
 
 def _new_session(client: TestClient) -> str:
@@ -72,7 +80,7 @@ def test_baseless_accusation_is_weak(client: TestClient):
     assert body["correct"] is False
     assert body["support_level"] == "weak"
     assert body["supporting"] == []
-    assert len(body["leads_remaining"]) == 10  # everything still unexamined
+    assert len(body["leads_remaining"]) == 12  # everything still unexamined
 
 
 def test_lock_evidence_implicates_key_holders(client: TestClient):

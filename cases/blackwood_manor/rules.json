@@ -91,6 +91,16 @@
         {"name": "opens", "args": ["?key", "?container"]}
       ],
       "conclusion": {"name": "had_means", "args": ["?person", "?container"]}
+    },
+    {
+      "id": "R_CANDLE_001",
+      "description": "A candle burnt low while in someone's keeping places them where it burned at the crime time.",
+      "conditions": [
+        {"name": "burnt_low", "args": ["?candle"]},
+        {"name": "marked", "args": ["?candle", "?person"]},
+        {"name": "crime_time", "args": ["?time"]}
+      ],
+      "conclusion": {"name": "was_at", "args": ["?person", "cellar", "?time"]}
     }
   ]
 }

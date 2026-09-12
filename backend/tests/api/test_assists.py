@@ -26,14 +26,14 @@ def _hint(client: TestClient, sid: str):
 def test_first_hints_meet_cast_then_clock(client: TestClient):
     # Deterministic priority: people first, then unexplored leads.
     sid = _new_session(client)
-    ids = [_hint(client, sid)["hint"]["id"] for _ in range(3)]
-    assert ids == ["talk:theo", "talk:bob", "examine:E_CLOCK"]
+    ids = [_hint(client, sid)["hint"]["id"] for _ in range(4)]
+    assert ids == ["talk:theo", "talk:bob", "talk:grey", "examine:E_CLOCK"]
     assert client.get(f"/sessions/{sid}").json()["event_counter"] == 0  # hints don't tick the clock
 
 
 def test_gated_hint_jumps_queue_after_safe(client: TestClient):
     sid = _new_session(client)
-    _hint(client, sid)  # examine:E_CLOCK (given, undiscovered)
+    _hint(client, sid)  # talk:theo (given, undiscovered)
     client.post(f"/sessions/{sid}/interactions/grandfather_clock")
     client.post(f"/sessions/{sid}/interactions/study_safe")
     hint = _hint(client, sid)
@@ -58,9 +58,17 @@ def test_review_hint_once_suspect_provable(client: TestClient):
         "torn_letter",
         "muddy_prints",
         "garden_boots",
+        "butlers_candle",
     ):
         client.post(f"/sessions/{sid}/interactions/{obj}")
-    for node in ("mara_clock_01", "mara_clock_02", "theo_alibi_01", "bob_greet_01"):
+    for node in (
+        "mara_clock_01",
+        "mara_clock_02",
+        "theo_alibi_01",
+        "bob_greet_01",
+        "grey_cellar_01",
+        "grey_cellar_02",
+    ):
         client.post(f"/sessions/{sid}/dialogue", json={"node_id": node})
     seen = set()
     for _ in range(30):

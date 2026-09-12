@@ -41,6 +41,7 @@ npm run build
 - Phase 7: semantic network (NetworkX session-graph endpoint + SVG visualization) — DONE
 - Phase 8: advanced logic (isolated resolution refutation + cross-checks, lifespan handler) — DONE
 - Enhancement 1: second case — Holloway Theatre (data-driven engine proven, case select, per-case layouts/sessions) — DONE
+- Enhancement 5: case wings — cellar + Grey (Blackwood), workshop + Kit (Holloway), exoneration arcs, stone walls — DONE
 - Enhancement 2: detective assists — deterministic hints (−50), standard/classic difficulty (×2), efficiency scoring, self-healing DB — DONE
 - Enhancement 3: presentation polish — generated tile art, lively sprites, synthesized sound, motion with reduced-motion respect — DONE
 - Enhancement 4: real game shell — title menu with progress, pause, case-closed screen, pixel-art UI (Kenney CC0 sprites, Press Start 2P/VT323) — DONE

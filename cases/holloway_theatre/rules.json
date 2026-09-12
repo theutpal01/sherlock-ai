@@ -100,6 +100,16 @@
         {"name": "opens", "args": ["?key", "?container"]}
       ],
       "conclusion": {"name": "had_means", "args": ["?person", "?container"]}
+    },
+    {
+      "id": "R_MEND_001",
+      "description": "A mending job bearing someone's hand places them where it was done at the crime time.",
+      "conditions": [
+        {"name": "mended", "args": ["?item"]},
+        {"name": "mended_by", "args": ["?item", "?person"]},
+        {"name": "crime_time", "args": ["?time"]}
+      ],
+      "conclusion": {"name": "was_at", "args": ["?person", "workshop", "?time"]}
     }
   ]
 }

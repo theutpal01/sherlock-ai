@@ -48,6 +48,20 @@
       "requires": ["vera_greet_01"],
       "text": "My programme? I lose programmes the way other women lose gloves. If you found it, keep it — a souvenir of the night my violin vanished.",
       "responses": []
+    },
+    {
+      "id": "kit_work_01",
+      "speaker": "kit",
+      "requires": [],
+      "text": "Mending curtains in the workshop all intermission, sir. Me needle never stopped.",
+      "responses": [{"text": "Show me the mending.", "next": "kit_work_02"}]
+    },
+    {
+      "id": "kit_work_02",
+      "speaker": "kit",
+      "requires": ["kit_work_01"],
+      "text": "See the hem? Twenty stitches to the inch. Miss Nell inspects every one — she'd have my hide else.",
+      "responses": []
     }
   ]
 }

@@ -7,9 +7,10 @@
   "suspects": ["vera", "otto", "nell"],
   "truth": {
     "culprit": "vera",
-    "summary": "Vera, pressed by gambling debts, slipped the spare safe key from her programme, entered the dressing room during intermission, and took the violin around 20:40. The undamaged safe, her debts, and Nell's sighting converge on her. Otto's rosin prints are a red herring: he crossed the stage hauling crates, then lied about it fearing blame.",
+    "summary": "Vera, pressed by gambling debts, slipped the spare safe key from her programme, entered the dressing room during intermission, and took the violin around 20:40. The undamaged safe, her debts, and Nell's sighting converge on her. Otto's rosin prints are a red herring: he crossed the stage hauling crates, then lied about it fearing blame. Kit spent the intermission mending curtains in the workshop, needle never still.",
     "timeline": [
       "20:25 - Otto hauls crates across the stage in his work boots.",
+      "20:28 - Kit settles in the workshop with the torn curtain panel.",
       "20:30 - Intermission begins; the auditorium empties.",
       "20:35 - Nell leaves the stage for the foyer.",
       "20:40 - Vera opens the dressing-room safe with the spare key. The call bell rings.",

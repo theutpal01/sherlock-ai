@@ -85,6 +85,28 @@
       "discovery": {"kind": "dialogue", "node_id": "vera_greet_01"},
       "reveals": [{"name": "claims_at", "args": ["vera", "auditorium", "20_40"]}],
       "note": "A claim, not a fact about the world: only usable via the alibi-contradiction rule."
+    },
+    {
+      "id": "E_CURTAIN",
+      "title": "Mended Curtain Panel",
+      "description": "A curtain panel neatly mended, Kit's stitching card pinned to the hem.",
+      "location": "workshop",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "mended_curtain"},
+      "reveals": [
+        {"name": "mended", "args": ["stage_curtain"]},
+        {"name": "mended_by", "args": ["stage_curtain", "kit"]}
+      ]
+    },
+    {
+      "id": "E_CLAIM_KIT",
+      "title": "Kit's Alibi Claim",
+      "description": "Kit states he spent the whole intermission mending curtains in the workshop.",
+      "location": "workshop",
+      "requires": ["kit_work_01"],
+      "discovery": {"kind": "dialogue", "node_id": "kit_work_01"},
+      "reveals": [{"name": "claims_at", "args": ["kit", "workshop", "20_40"]}],
+      "note": "A claim, not a fact about the world: only usable via the alibi-contradiction rule."
     }
   ]
 }

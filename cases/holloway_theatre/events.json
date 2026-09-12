@@ -12,6 +12,12 @@
       "description": "After the rosin trail is found, Otto slips onto the stage, afraid of what it means.",
       "trigger": {"type": "evidence_discovered", "evidence": "E_ROSIN"},
       "effect": {"type": "move_npc", "npc": "otto", "to": "stage"}
+    },
+    {
+      "id": "EVT_KIT_SUMMONED",
+      "description": "After the open safe is found, Kit is fetched from the workshop and waits in the foyer.",
+      "trigger": {"type": "evidence_discovered", "evidence": "E_SAFE"},
+      "effect": {"type": "move_npc", "npc": "kit", "to": "foyer"}
     }
   ]
 }
