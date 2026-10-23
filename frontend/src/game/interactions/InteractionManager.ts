@@ -77,7 +77,6 @@ export class InteractionManager {
       best?.kind !== this.current?.kind || best?.id !== this.current?.id;
     this.current = best;
     if (best && this.player) {
-      const verb = best.kind === 'npc' ? 'TALK TO' : 'EXAMINE';
       const hasController = Boolean(this.scene.input.gamepad?.pad1?.connected);
       const hasTouch = this.scene.sys.game.device.input.touch;
       const inputHint = hasTouch && hasController
@@ -87,7 +86,7 @@ export class InteractionManager {
           : hasController
             ? '[E/A/X]'
             : '[E]';
-      this.prompt.setText(`${inputHint} ${verb} ${best.label.toUpperCase()}`);
+      this.prompt.setText(inputHint);
       const view = this.scene.cameras.main.worldView;
       const margin = 8;
       const halfWidth = this.prompt.width / 2;

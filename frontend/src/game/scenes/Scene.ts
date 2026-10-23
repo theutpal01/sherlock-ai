@@ -380,35 +380,27 @@ export class Scene extends Phaser.Scene {
     );
   }
 
-  /**
-   * Label layer: y-sorted base depths so overlap reads naturally, the
-   * nearest interactable boosted to the front, and plates behind the
-   * detective softened (never hidden) so text stays legible.
-   */
+  /** Show labels only when an interaction or nearby doorway makes them useful. */
   private updatePlates(): void {
     if (!this.alive || !this.player) return;
     this.player.sprite.setDepth(this.spriteDepth(this.player.y));
     for (const [id, marker] of this.npcMarkers) {
       marker.dot.setDepth(this.spriteDepth(marker.dot.y));
     }
-    const pr = {
-      x0: this.player.x - 24,
-      y0: this.player.y - 32,
-      x1: this.player.x + 24,
-      y1: this.player.y + 32,
-    };
     for (const entry of this.plates) {
       const { x, y } = entry.pos();
       const isActive = this.activePlateId !== null && entry.id === this.activePlateId;
+      const door = entry.id.startsWith('door:')
+        ? this.layout.doors.find((candidate) => `door:${candidate.id}` === entry.id)
+        : undefined;
+      const nearDoor = Boolean(
+        door && door.roomId === this.currentRoomId &&
+        Phaser.Math.Distance.Between(this.player.x, this.player.y, x, y) <= 120,
+      );
+      entry.plate.container.setVisible(isActive || nearDoor);
+      if (!isActive && !nearDoor) continue;
       entry.plate.container.setDepth(isActive ? 15 : 4 + (y / this.layout.worldH) * 2);
-      if (isActive) {
-        entry.plate.setDimmed(false);
-        continue;
-      }
-      const hw = entry.plate.w / 2;
-      const hh = entry.plate.h / 2;
-      const overlap = x - hw < pr.x1 && x + hw > pr.x0 && y - hh < pr.y1 && y + hh > pr.y0;
-      entry.plate.setDimmed(overlap);
+      entry.plate.setDimmed(false);
     }
   }
 
@@ -518,11 +510,6 @@ export class Scene extends Phaser.Scene {
         const rect = this.add.rectangle(cx, cy, ww, hh, 0x000000, 0);
         rect.setData('solid', true);
       }
-      // Area nameplate, top-left inside the room.
-      this.registerPlate(`room:${room.id}`, new Plate(this, x + 120, y + 30, { title: room.name, kind: 'room' }), () => ({
-        x: x + 120,
-        y: y + 30,
-      }));
       // Hand-placed furniture dressing from the generated case art set.
       for (const item of room.decor ?? []) {
         const image = this.add.image(item.x, item.y, item.tex).setScale(item.scale ?? 2).setDepth(1);

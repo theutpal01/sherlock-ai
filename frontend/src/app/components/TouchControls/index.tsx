@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { gameEvents } from '../../../game/events/bridge';
 import { touchState } from '../../../game/touch';
+import type { NearbyInteraction } from '../../hooks/useGameEvents';
 
 type Dir = 'up' | 'down' | 'left' | 'right';
 
@@ -37,7 +38,7 @@ function DirectionArrow({ dir }: { dir: Dir }) {
  * devices. The D-pad writes shared touch state (read by Player); the
  * action button travels the same bridge path as the E key.
  */
-export default function TouchControls() {
+export default function TouchControls({ nearbyInteraction }: { nearbyInteraction: NearbyInteraction | null }) {
   const [visible, setVisible] = useState(() =>
     typeof window !== 'undefined' &&
     typeof window.matchMedia === 'function' &&
@@ -137,7 +138,7 @@ export default function TouchControls() {
         {BUTTONS.map((b) => (
           <button
             key={b.dir}
-            className="pixel-btn h-11 w-11 rounded bg-stone-900 text-lg text-amber-200"
+            className="pixel-btn h-11 w-11 rounded bg-stone-900 text-lg text-amber-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300"
             style={{ gridColumn: b.column, gridRow: b.row, touchAction: 'none' }}
             type="button"
             onPointerDown={setPointer(b.dir, true)}
@@ -161,13 +162,18 @@ export default function TouchControls() {
         ))}
       </div>
       <button
-        className="pixel-btn h-16 w-16 shrink-0 rounded-full bg-amber-800 font-pixel text-xs text-amber-100"
+        className="pixel-btn touch-action-btn flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-amber-800 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 disabled:cursor-not-allowed disabled:bg-stone-800 disabled:text-white"
         style={{ touchAction: 'none' }}
         onClick={() => gameEvents.emit({ type: 'INTERACT_PRESSED' })}
-        aria-label="Interact"
+        disabled={!nearbyInteraction}
+        aria-label={nearbyInteraction
+          ? `${nearbyInteraction.kind === 'npc' ? 'Talk to' : 'Examine'} ${nearbyInteraction.label}`
+          : 'No nearby person or object to interact with'}
         aria-keyshortcuts="E Enter Space"
       >
-        E
+        <span className="font-mono text-[10px] font-semibold leading-none">
+          {nearbyInteraction?.kind === 'npc' ? 'Talk' : nearbyInteraction ? 'Examine' : 'Use'}
+        </span>
       </button>
     </div>
   );

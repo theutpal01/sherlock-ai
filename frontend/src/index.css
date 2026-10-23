@@ -65,6 +65,10 @@ aside h2 {
   cursor: not-allowed;
 }
 
+.pixel-btn.touch-action-btn:disabled {
+  opacity: 1;
+}
+
 .pixel-img {
   image-rendering: pixelated;
 }

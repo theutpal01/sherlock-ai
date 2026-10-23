@@ -14,8 +14,8 @@ const rooms: CaseLayout['rooms'] = [
     floorStyle: 'wood',
     wallStyle: 'copper',
     decor: [
-      { tex: 'prop-armillary', x: 100, y: 120, scale: 1 },
-      { tex: 'prop-star-map-chart', x: 520, y: 110, scale: 1 },
+      { tex: 'prop-armillary', x: 100, y: 120, scale: 0.5 },
+      { tex: 'prop-star-map-chart', x: 520, y: 110, scale: 0.45 },
     ],
   },
   {
@@ -28,8 +28,8 @@ const rooms: CaseLayout['rooms'] = [
     floorStyle: 'star-map',
     wallStyle: 'copper',
     decor: [
-      { tex: 'prop-observatory-telescope', x: 990, y: 110, scale: 1.2 },
-      { tex: 'prop-armillary', x: 1320, y: 340, scale: 0.8 },
+      { tex: 'prop-observatory-telescope', x: 990, y: 110, scale: 0.7 },
+      { tex: 'prop-armillary', x: 1320, y: 340, scale: 0.5 },
     ],
   },
   {
@@ -42,8 +42,8 @@ const rooms: CaseLayout['rooms'] = [
     floorStyle: 'stone',
     wallStyle: 'velvet',
     decor: [
-      { tex: 'prop-darkroom-tongs', x: 1850, y: 110, scale: 1 },
-      { tex: 'furn-shelf', x: 2100, y: 100, scale: 1.5, solid: true },
+      { tex: 'prop-darkroom-tongs', x: 1850, y: 110, scale: 0.45 },
+      { tex: 'furn-shelf', x: 2100, y: 100, scale: 0.9, solid: true },
     ],
   },
   {
@@ -56,9 +56,9 @@ const rooms: CaseLayout['rooms'] = [
     floorStyle: 'star-map',
     wallStyle: 'copper',
     decor: [
-      { tex: 'furn-books', x: 100, y: 650, scale: 2 },
-      { tex: 'prop-star-map-chart', x: 500, y: 620, scale: 1 },
-      { tex: 'furn-desk', x: 500, y: 870, scale: 1.5, solid: true },
+      { tex: 'furn-books', x: 100, y: 650, scale: 0.8 },
+      { tex: 'prop-star-map-chart', x: 500, y: 620, scale: 0.45 },
+      { tex: 'furn-desk', x: 500, y: 870, scale: 0.9, solid: true },
     ],
   },
   {
@@ -71,8 +71,8 @@ const rooms: CaseLayout['rooms'] = [
     floorStyle: 'stone',
     wallStyle: 'copper',
     decor: [
-      { tex: 'prop-observatory-dynamo', x: 1260, y: 660, scale: 1 },
-      { tex: 'furn-lamp', x: 900, y: 660, scale: 1.5 },
+      { tex: 'prop-observatory-dynamo', x: 1260, y: 660, scale: 0.55 },
+      { tex: 'furn-lamp', x: 900, y: 660, scale: 0.8 },
     ],
   },
 ];
@@ -96,16 +96,16 @@ export const starfallObservatoryLayout: CaseLayout = {
     { id: 'archive_generator_b', roomId: 'generator_room', label: 'To Chart Archive', x: 784, y: 734, w: 48, h: 72, targetRoomId: 'chart_archive' },
   ],
   objects: [
-    { id: 'plate_case', roomId: 'telescope_dome', label: 'Padded plate case', x: 1280, y: 190, radius: 64, sprite: { kind: 'image', key: 'prop-negative-case' }, scale: 0.8, evidence: 'E_PLATE' },
+    { id: 'plate_case', roomId: 'telescope_dome', label: 'Padded plate case', x: 1280, y: 190, radius: 64, sprite: { kind: 'image', key: 'prop-negative-case' }, scale: 0.55, evidence: 'E_PLATE' },
     { id: 'dome_lock', roomId: 'telescope_dome', label: 'Plate-case lock', x: 1340, y: 340, radius: 56, sprite: { kind: 'texture', key: 'spr-brass-lock' }, scale: 2, evidence: 'E_LOCK' },
-    { id: 'star_log', roomId: 'telescope_dome', label: 'Telescope log', x: 900, y: 340, radius: 56, sprite: { kind: 'image', key: 'prop-star-map-chart' }, scale: 0.65, evidence: 'E_LOG' },
-    { id: 'dome_tracks', roomId: 'telescope_dome', label: 'Frosted dome tracks', x: 1050, y: 370, radius: 56, sprite: { kind: 'image', key: 'prop-blue-silica-tracks' }, scale: 0.7, evidence: 'E_TRACK' },
-    { id: 'key_register', roomId: 'chart_archive', label: 'Duplicate-key register', x: 380, y: 840, radius: 56, sprite: { kind: 'image', key: 'prop-key-register' }, scale: 0.7, evidence: 'E_DARKROOM_KEY' },
-    { id: 'publisher_cable', roomId: 'chart_archive', label: "Publisher's cable", x: 170, y: 870, radius: 56, sprite: { kind: 'image', key: 'prop-accession-letter' }, scale: 0.7, evidence: 'E_DEBT' },
-    { id: 'archive_seal', roomId: 'chart_archive', label: 'Night accession ledger', x: 540, y: 710, radius: 56, sprite: { kind: 'image', key: 'prop-open-field-notes' }, scale: 0.7, evidence: 'E_ARCHIVE_SEAL' },
-    { id: 'elias_boots', roomId: 'darkroom', label: "Director's observing boots", x: 1690, y: 340, radius: 56, sprite: { kind: 'image', key: 'prop-observing-boots' }, scale: 0.65, evidence: 'E_BOOTS' },
-    { id: 'emulsion_gloves', roomId: 'darkroom', label: 'Drying-room gloves', x: 2020, y: 350, radius: 56, sprite: { kind: 'image', key: 'prop-darkroom-gloves' }, scale: 0.65, evidence: 'E_GLOVES' },
-    { id: 'dynamo_ledger', roomId: 'generator_room', label: 'Dynamo gauge and log', x: 960, y: 850, radius: 56, sprite: { kind: 'image', key: 'prop-observatory-dynamo' }, scale: 0.65, evidence: 'E_DYNAMO' },
+    { id: 'star_log', roomId: 'telescope_dome', label: 'Telescope log', x: 900, y: 340, radius: 56, sprite: { kind: 'image', key: 'prop-star-map-chart' }, scale: 0.45, evidence: 'E_LOG' },
+    { id: 'dome_tracks', roomId: 'telescope_dome', label: 'Frosted dome tracks', x: 1050, y: 370, radius: 56, sprite: { kind: 'image', key: 'prop-blue-silica-tracks' }, scale: 0.45, evidence: 'E_TRACK' },
+    { id: 'key_register', roomId: 'chart_archive', label: 'Duplicate-key register', x: 380, y: 840, radius: 56, sprite: { kind: 'image', key: 'prop-key-register' }, scale: 0.45, evidence: 'E_DARKROOM_KEY' },
+    { id: 'publisher_cable', roomId: 'chart_archive', label: "Publisher's cable", x: 170, y: 870, radius: 56, sprite: { kind: 'image', key: 'prop-accession-letter' }, scale: 0.45, evidence: 'E_DEBT' },
+    { id: 'archive_seal', roomId: 'chart_archive', label: 'Night accession ledger', x: 540, y: 710, radius: 56, sprite: { kind: 'image', key: 'prop-open-field-notes' }, scale: 0.45, evidence: 'E_ARCHIVE_SEAL' },
+    { id: 'elias_boots', roomId: 'darkroom', label: "Director's observing boots", x: 1690, y: 340, radius: 56, sprite: { kind: 'image', key: 'prop-observing-boots' }, scale: 0.45, evidence: 'E_BOOTS' },
+    { id: 'emulsion_gloves', roomId: 'darkroom', label: 'Drying-room gloves', x: 2020, y: 350, radius: 56, sprite: { kind: 'image', key: 'prop-darkroom-gloves' }, scale: 0.45, evidence: 'E_GLOVES' },
+    { id: 'dynamo_ledger', roomId: 'generator_room', label: 'Dynamo gauge and log', x: 960, y: 850, radius: 56, sprite: { kind: 'image', key: 'prop-observatory-dynamo' }, scale: 0.45, evidence: 'E_DYNAMO' },
   ],
   npcSpots: {
     entry_hall: [{ x: 160, y: 150 }, { x: 520, y: 150 }],

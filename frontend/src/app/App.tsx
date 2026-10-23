@@ -390,16 +390,12 @@ export default function App() {
       .sort(),
   });
   let sessionStatus = 'Preparing investigation…';
-  let sessionStatusColor = 'bg-stone-500';
   if (sessionError) {
     sessionStatus = 'Investigation unavailable';
-    sessionStatusColor = 'bg-red-500';
   } else if (sessionReady && closed) {
     sessionStatus = 'Case closed';
-    sessionStatusColor = 'bg-emerald-400';
   } else if (sessionReady) {
     sessionStatus = 'Investigation active';
-    sessionStatusColor = 'bg-amber-400';
   }
 
   // A fresh investigation starts the cold streak at zero, but the
@@ -724,6 +720,7 @@ export default function App() {
     if (fresh) newInvestigation(id, runDate);
     setCaseId(id);
     setDailyRunDate(runDate);
+    setActiveWorkbench('casefile');
     setVerdictOverlay(null);
     setPaused(false);
     setScreen('game');
@@ -863,55 +860,44 @@ export default function App() {
 
   return (
     <div className="min-h-dvh bg-stone-950 text-stone-100">
-      <header className="border-b border-stone-800 px-4 py-3 sm:px-6 sm:py-4">
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-          <h1 className="font-pixel mr-1 text-base tracking-tight text-stone-100">SHERLOCK AI</h1>
-          <button
-            ref={pauseButtonRef}
-            onClick={() => setPause(true)}
-            disabled={sessionLoading || Boolean(sessionError) || engineLoading || Boolean(engineError) || showHowTo || Boolean(activeDialogue) || Boolean(verdictOverlay)}
-            className="min-h-11 rounded border border-stone-700 px-2 py-1 text-sm text-stone-300 hover:bg-stone-800 disabled:cursor-not-allowed disabled:opacity-60"
-            title="Pause (Esc)"
-            aria-keyshortcuts="Escape"
-          >
-            Pause
-          </button>
-          <button
-            onClick={toggleMuted}
-            className="min-h-11 rounded border border-stone-700 px-2 py-1 text-sm text-stone-300 hover:bg-stone-800"
-            aria-pressed={!muted}
-            aria-label="Sound effects"
-            title="Toggle sound effects"
-          >
-            Sound: {muted ? 'off' : 'on'}
-          </button>
+      <header className="border-b border-stone-800 px-4 py-3 sm:px-6">
+        <div className="mx-auto flex max-w-[1500px] flex-wrap items-center gap-2 sm:gap-4">
+          <h1 className="font-pixel min-w-0 flex-1 basis-[180px] text-sm tracking-tight text-stone-100 sm:text-base">
+            {caseInfo ? caseTitle(cases, caseId) : 'Loading case…'}
+          </h1>
+          <div className="ml-auto flex shrink-0 items-center gap-2">
+            <button
+              ref={pauseButtonRef}
+              onClick={() => setPause(true)}
+              disabled={sessionLoading || Boolean(sessionError) || engineLoading || Boolean(engineError) || showHowTo || Boolean(activeDialogue) || Boolean(verdictOverlay)}
+              className="min-h-11 rounded border border-stone-700 px-3 py-1 text-sm text-stone-200 hover:bg-stone-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 disabled:cursor-not-allowed disabled:opacity-60"
+              title="Pause (Esc)"
+              aria-keyshortcuts="Escape"
+            >
+              Pause <span className="text-stone-500">· Esc</span>
+            </button>
+            <button
+              onClick={toggleMuted}
+              className="min-h-11 rounded border border-stone-700 px-3 py-1 text-sm text-stone-200 hover:bg-stone-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300"
+              aria-pressed={!muted}
+              aria-label="Sound effects"
+              title="Toggle sound effects"
+            >
+              Sound {muted ? 'off' : 'on'}
+            </button>
+          </div>
         </div>
-        <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-stone-900 pt-3 text-sm">
-          <p className="font-semibold text-stone-100">{caseInfo ? caseTitle(cases, caseId) : 'Loading case…'}</p>
-          <p className="text-stone-400">Room <span className="text-stone-200">{room.roomName}</span></p>
-          {activeWorkbench !== 'field' && (
-            <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">
-              Current room: {room.roomName}
-            </span>
-          )}
-          <p className="text-stone-400">Evidence <span className="text-stone-200">{notebook.length}/{evidenceTotal || '…'}</span></p>
-          <p className="text-stone-400">Clock <span className="text-stone-200">{world ? world.event_counter : '—'}</span></p>
-          <span role="status" aria-live="polite" className="inline-flex items-center gap-2 text-stone-400">
-            <span
-              aria-hidden="true"
-              className={`h-2 w-2 rounded-full ${sessionStatusColor}`}
-            />
-            {sessionStatus}
-          </span>
-        </div>
+        <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+          Current room: {room.roomName}. {sessionStatus}
+        </span>
         {sessionStorageWarning && (
           <p role="status" aria-live="polite" className="mt-2 text-xs text-amber-300">
             Session references could not be read or saved in browser storage. Server-side progress remains intact, but this investigation may not resume after a reload.
           </p>
         )}
       </header>
-      <main className="grid gap-4 p-3 sm:p-4 lg:grid-cols-[2fr_1fr] lg:p-6">
-        <section className="relative overflow-hidden rounded-lg border border-stone-800">
+      <main className="mx-auto grid w-full max-w-[1500px] gap-4 p-3 sm:p-4 lg:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)] lg:items-start lg:gap-5 lg:p-6">
+        <section className="relative min-w-0 overflow-hidden rounded-lg border border-stone-800">
           <div className="relative">
             <div
               ref={mountRef}
@@ -949,30 +935,16 @@ export default function App() {
             )}
           </div>
           {!engineLoading && !engineError && !sessionLoading && !sessionError && !paused && !verdictOverlay && !activeDialogue && !closed && (
-            <TouchControls />
+            <TouchControls nearbyInteraction={nearbyInteraction} />
           )}
-          <p className="border-t border-stone-800 px-4 py-2 text-xs text-stone-400">
-            Move with arrow keys or WASD · use the D-pad on touch screens · walk into a gold doorway to
-            change rooms · near an object or character, press E, use the nearby action button, or tap
-            it · Esc pauses
+          <p className="hidden border-t border-stone-800 px-3 py-1 text-[11px] text-stone-500 md:block">
+            WASD / arrows move · E examine / talk · Esc pause
           </p>
           <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
             {nearbyInteraction
               ? `Nearby interaction available: ${nearbyInteraction.kind === 'npc' ? 'talk to' : 'examine'} ${nearbyInteraction.label}. Activate the nearby action button to begin.`
               : ''}
           </p>
-          {nearbyInteraction && !activeDialogue && !paused && !closed && !sessionLoading && !sessionError && !engineLoading && !engineError && (
-            <div className="flex flex-wrap items-center justify-between gap-2 border-t border-stone-800 bg-stone-900/70 px-4 py-2">
-              <span className="text-sm text-stone-200">Nearby: {nearbyInteraction.label}</span>
-              <button
-                className="pixel-btn min-h-11 rounded bg-amber-800 px-3 py-2 text-sm font-semibold text-amber-100"
-                aria-keyshortcuts="E Enter Space"
-                onClick={() => gameEvents.emit({ type: 'INTERACT_PRESSED' })}
-              >
-                {nearbyInteraction.kind === 'npc' ? 'Talk to' : 'Examine'} {nearbyInteraction.label}
-              </button>
-            </div>
-          )}
           {lastError && (
             <p className="border-t border-red-900 bg-red-950 px-4 py-2 text-xs text-red-200" role="alert">
               {lastError}
@@ -981,16 +953,15 @@ export default function App() {
           {discoveryToast && (
             <div
               key={discoveryToast.id}
-              className="anim-toast absolute right-3 top-3 z-10 max-w-xs rounded border-2 border-amber-500 bg-stone-950/95 p-3 shadow-[4px_4px_0_0_#000]"
+              className="anim-toast absolute right-3 top-3 z-10 max-w-[220px] rounded border-2 border-amber-500 bg-stone-950/95 p-2 shadow-[4px_4px_0_0_#000]"
             >
               <div role="status" aria-live="polite">
-                <p className="font-pixel text-[10px] text-amber-300">CLUE DISCOVERED</p>
+                <p className="font-pixel text-[10px] text-amber-300">CLUE FOUND</p>
                 <p className="mt-1 text-sm font-semibold text-stone-100">{discoveryToast.title}</p>
-                <p className="mt-0.5 text-xs text-stone-300">{discoveryToast.description}</p>
               </div>
               <button
                 type="button"
-                className="pixel-btn mt-2 min-h-11 rounded bg-amber-900 px-3 py-2 text-xs font-semibold text-amber-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-300"
+                className="pixel-btn mt-1 min-h-9 rounded bg-amber-900 px-2 py-1 text-xs font-semibold text-amber-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-300"
                 onFocus={() => {
                   if (toastTimer.current) clearTimeout(toastTimer.current);
                 }}
@@ -1009,13 +980,13 @@ export default function App() {
                   setDiscoveryToast(null);
                 }}
               >
-                Open clue in case file
+                View clue
               </button>
             </div>
           )}
         </section>
-        <aside className="flex max-h-[640px] min-h-0 flex-col gap-3 overflow-y-auto">
-          <ColdStreakMeter streak={streak} />
+        <aside className="flex min-h-0 min-w-0 flex-col gap-3 lg:sticky lg:top-4 lg:max-h-[calc(100dvh-2rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
+          {streak > 0 && <ColdStreakMeter streak={streak} />}
           <div role="tablist" className="sticky top-0 z-10 grid grid-cols-3 gap-1 rounded-lg border border-stone-800 bg-stone-950 p-1" aria-label="Investigation workspaces">
             {([
               ['casefile', 'Case file', `${notebook.length}/${caseInfo?.evidence.length ?? '…'} finds`],
@@ -1047,7 +1018,7 @@ export default function App() {
                   event.preventDefault();
                   tabs[next]?.focus();
                 }}
-                className={`rounded px-2 py-2 text-xs font-semibold transition-colors ${
+                className={`rounded px-2 py-2 text-xs font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 ${
                   activeWorkbench === id
                     ? 'bg-amber-900 text-amber-100'
                     : 'text-stone-400 hover:bg-stone-900 hover:text-stone-100'

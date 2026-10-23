@@ -73,6 +73,7 @@ export class Plate {
     const children: Phaser.GameObjects.GameObject[] = sub ? [bg, title, sub] : [bg, title];
     this.container = scene.add.container(x, y, children);
     this.container.setDepth(opts.depth ?? 4);
+    this.container.setVisible(false);
     this.title = title;
   }
 

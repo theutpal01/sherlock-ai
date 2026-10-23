@@ -45,14 +45,14 @@ export default function ColdStreakMeter({ streak }: { streak: number }) {
   }, [streak]);
 
   return (
-    <div className="rounded-lg border border-stone-800 p-4">
-      <div className="flex items-center justify-between gap-2">
-        <h2 className="font-semibold">Cold Streak</h2>
-        <span className={`font-pixel text-xs ${tier.text}`}>{tier.label}</span>
+    <div className="flex items-center gap-3 rounded-lg border border-stone-800 px-3 py-2">
+      <div className="flex shrink-0 items-baseline gap-1.5">
+        <span className="text-xs text-stone-400">Streak</span>
+        <span className={`font-pixel text-sm ${tier.text}`}>{streak}</span>
       </div>
       <div
         key={pulse}
-        className="anim-streak-pulse mt-2 flex gap-1"
+        className="anim-streak-pulse flex min-w-0 flex-1 gap-1"
         role="meter"
         aria-valuemin={0}
         aria-valuemax={MAX_SEGMENTS}
@@ -67,11 +67,6 @@ export default function ColdStreakMeter({ streak }: { streak: number }) {
           />
         ))}
       </div>
-      <p className="mt-2 text-xs text-stone-400">
-        {streak === 0
-          ? 'Chain discoveries back-to-back to heat up.'
-          : `${streak} discovery${streak === 1 ? '' : 's'} in a row. A hint or a wrong guess cools it.`}
-      </p>
     </div>
   );
 }
