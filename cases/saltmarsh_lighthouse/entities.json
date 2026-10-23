@@ -1,0 +1,39 @@
+{
+  "npcs": [
+    {
+      "id": "finn",
+      "name": "Finn Marlow",
+      "role": "Keeper's apprentice",
+      "location": "bunkroom",
+      "description": "Young, quick-handed, and jumpy as a landed fish."
+    },
+    {
+      "id": "odda",
+      "name": "Odda Sill",
+      "role": "Cook",
+      "location": "galley",
+      "description": "Flour to the elbows; feeds the rock and brooks no nonsense."
+    },
+    {
+      "id": "corwin",
+      "name": "Corwin Hale",
+      "role": "Principal keeper",
+      "location": "causeway",
+      "description": "Thirty years on the rock; keeps the master key on a lanyard."
+    }
+  ],
+  "objects": [
+    {"id": "beacon_lamp", "room": "lamp_room", "label": "Great lamp", "evidence": "E_LAMP"},
+    {"id": "oil_can", "room": "lamp_room", "label": "Empty oil can", "evidence": "E_OIL"},
+    {"id": "store_lock", "room": "lamp_room", "label": "Oil-store lock (look closer)", "evidence": "E_LOCK"},
+    {"id": "finns_coat", "room": "bunkroom", "label": "Finn's coat", "evidence": "E_COAT"},
+    {"id": "debt_ledger", "room": "bunkroom", "label": "Open ledger", "evidence": "E_LEDGER"},
+    {"id": "oily_prints", "room": "lamp_room", "label": "Oily footprint", "evidence": "E_PRINTS"},
+    {"id": "finns_seaboots", "room": "bunkroom", "label": "Sea boots", "evidence": "E_BOOTS"},
+    {"id": "flour_apron", "room": "galley", "label": "Floured apron", "evidence": "E_APRON"}
+  ],
+  "doors": [
+    {"id": "causeway_door", "between": ["causeway", "galley"], "locked": false, "note": "Heavy door off the causeway."},
+    {"id": "stair_door", "between": ["galley", "lamp_room"], "locked": false, "note": "Narrow stair up to the lamp."}
+  ]
+}

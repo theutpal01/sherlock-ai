@@ -1,12 +1,15 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { api, type AccuseResult } from '../../../api/client';
-import { portrait } from '../../../game/art';
+import { portrait } from '../../../game/portraits';
 
 interface SuspectState {
   provable: boolean | null;
   why: string | null;
   open: boolean;
+  loading: boolean;
 }
+
+const EMPTY_STATE: SuspectState = { provable: null, why: null, open: false, loading: false };
 
 /**
  * Suspect / hypothesis UI. Provability comes from backward-chaining
@@ -15,40 +18,95 @@ interface SuspectState {
  */
 export default function SuspectPanel({
   sessionId,
+  caseId,
   suspects,
   names,
   closed,
   onAccuse,
+  evidenceVersion,
 }: {
   sessionId: string | null;
+  caseId: string;
   suspects: string[];
   names: Record<string, string>;
   closed: { accused: string; correct: boolean } | null;
   onAccuse: (suspect: string) => Promise<AccuseResult>;
+  evidenceVersion: string;
 }) {
   const [states, setStates] = useState<Record<string, SuspectState>>({});
   const [confirm, setConfirm] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const requestSequence = useRef(0);
+  const requestIds = useRef(new Map<string, number>());
+  const contextKey = JSON.stringify([sessionId, evidenceVersion, suspects]);
+  const [statesContext, setStatesContext] = useState(contextKey);
+  const contextKeyRef = useRef(contextKey);
 
-  const toggle = async (id: string) => {
-    const current = states[id] ?? { provable: null, why: null, open: false };
-    const open = !current.open;
-    setStates((prev) => ({ ...prev, [id]: { ...current, open } }));
-    if (open && current.provable === null && sessionId) {
-      try {
-        const result = await api.query(sessionId, 'possible_suspect', [id]);
-        setStates((prev) => ({
-          ...prev,
-          [id]: { provable: result.success, why: result.why, open: true },
+  useLayoutEffect(() => {
+    contextKeyRef.current = contextKey;
+  }, [contextKey]);
+
+  useEffect(() => {
+    requestIds.current.clear();
+    setStates({});
+    setStatesContext(contextKey);
+    return () => requestIds.current.clear();
+  }, [contextKey]);
+
+  const querySuspect = useCallback(async (id: string) => {
+    if (!sessionId || requestIds.current.has(id)) return;
+    const requestedContext = contextKey;
+    const requestId = ++requestSequence.current;
+    requestIds.current.set(id, requestId);
+    setStates((previous) => ({
+      ...previous,
+      [id]: { ...(previous[id] ?? EMPTY_STATE), loading: true, why: null },
+    }));
+    const isCurrent = () =>
+      requestIds.current.get(id) === requestId && contextKeyRef.current === requestedContext;
+    try {
+      const result = await api.query(sessionId, 'possible_suspect', [id]);
+      if (isCurrent()) {
+        setStates((previous) => ({
+          ...previous,
+          [id]: {
+            ...(previous[id] ?? EMPTY_STATE),
+            provable: result.success,
+            why: result.why,
+          },
         }));
-      } catch {
-        setStates((prev) => ({
-          ...prev,
-          [id]: { provable: null, why: 'Could not reach the reasoning backend.', open: true },
+      }
+    } catch {
+      if (isCurrent()) {
+        setStates((previous) => ({
+          ...previous,
+          [id]: {
+            ...(previous[id] ?? EMPTY_STATE),
+            provable: null,
+            why: 'Could not reach the reasoning backend.',
+          },
+        }));
+      }
+    } finally {
+      if (isCurrent()) {
+        requestIds.current.delete(id);
+        setStates((previous) => ({
+          ...previous,
+          [id]: { ...(previous[id] ?? EMPTY_STATE), loading: false },
         }));
       }
     }
+  }, [contextKey, sessionId]);
+
+  const toggle = (id: string) => {
+    const current = (statesContext === contextKey ? states[id] : undefined) ?? EMPTY_STATE;
+    const open = !current.open;
+    setStates((previous) => ({
+      ...previous,
+      [id]: { ...(previous[id] ?? EMPTY_STATE), open },
+    }));
+    if (open && current.provable === null && !current.loading) void querySuspect(id);
   };
 
   const accuse = async (id: string) => {
@@ -68,16 +126,18 @@ export default function SuspectPanel({
     }
   };
 
+  const visibleStates = statesContext === contextKey ? states : {};
+
   return (
     <div>
       <ul className="space-y-2">
         {suspects.map((id) => {
-          const st = states[id] ?? { provable: null, why: null, open: false };
+          const st = visibleStates[id] ?? EMPTY_STATE;
           return (
             <li key={id} className="rounded border border-stone-800 bg-stone-900 p-2">
               <div className="flex items-center justify-between gap-2">
                 <img
-                  src={portrait(id)}
+                  src={portrait(id, caseId)}
                   alt=""
                   width={40}
                   height={39}
@@ -88,35 +148,40 @@ export default function SuspectPanel({
                   }}
                 />
                 <button
-                  className="flex-1 text-left text-sm font-semibold text-stone-100"
+                  className="min-h-11 flex-1 text-left text-sm font-semibold text-stone-100"
                   onClick={() => void toggle(id)}
+                  aria-expanded={st.open}
                 >
                   {names[id] ?? id}{' '}
-                  <span className="text-xs font-normal text-stone-500">
-                    {st.provable === null
-                      ? '· query…'
-                      : st.provable
-                        ? '· possible suspect'
-                        : '· no case yet'}
+                  <span className="text-xs font-normal text-stone-400">
+                    {st.loading
+                      ? '· checking…'
+                      : st.provable === null
+                        ? st.why
+                          ? '· query unavailable'
+                          : '· not checked'
+                        : st.provable
+                          ? '· possible suspect'
+                          : '· no case yet'}
                   </span>
                 </button>
                 {!closed && (
                   <button
                     disabled={busy}
                     onClick={() => void accuse(id)}
-                    className={`rounded px-2 py-1 text-xs font-semibold ${
+                    className={`min-h-11 rounded px-2 py-1 text-xs font-semibold ${
                       confirm === id
                         ? 'bg-red-700 text-white hover:bg-red-600'
                         : 'border border-red-900 text-red-300 hover:bg-red-950'
-                    } disabled:opacity-50`}
+                    } disabled:opacity-70`}
                   >
                     {confirm === id ? 'Confirm?' : 'Accuse'}
                   </button>
                 )}
               </div>
-              {st.open && st.why && (
+              {st.open && (st.loading || st.why) && (
                 <pre className="mt-1 whitespace-pre-wrap font-mono text-xs leading-snug text-stone-300">
-                  {st.provable === null ? '…' : st.why}
+                  {st.loading ? 'Checking suspect against the current evidence…' : st.why}
                 </pre>
               )}
             </li>

@@ -1,0 +1,7 @@
+{
+  "nodes": [
+    {"id":"celia_office_01","speaker":"celia","requires":[],"text":"I was in my office all evening. The greenhouse key never left its drawer, and I did not go near the orchid gallery.","responses":[]},
+    {"id":"rowan_boiler_01","speaker":"rowan","requires":[],"text":"The boiler needed watching once the rain came in. I kept to the boiler room and entered the pressure every quarter-hour.","responses":[]},
+    {"id":"theo_corridor_01","speaker":"theo","requires":[],"text":"I saw Miss Vale cross from the gallery with the silver watering can. She looked as if she did not want the lantern to catch her face.","responses":[]}
+  ]
+}

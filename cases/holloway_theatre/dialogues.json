@@ -11,7 +11,7 @@
       "id": "nell_bell_02",
       "speaker": "nell",
       "requires": ["nell_bell_01"],
-      "text": "Past the dressing room, for a costume check. And Miss Vera was inside. I thought nothing of it — until now.",
+      "text": "Past the dressing room, for a costume check. And Miss Vera was inside. I thought nothing of it — until now. Take the dressing-room key and search for the violin.",
       "responses": [{"text": "We'll find it, Nell.", "next": "nell_foyer_02"}]
     },
     {

@@ -1,0 +1,17 @@
+{
+  "comment": "Predictable character movement after testimony; these effects change no evidence or case truth.",
+  "events": [
+    {
+      "id": "EVT_MIRA_CHECKS_DYNAMO",
+      "description": "After answering about her alibi, Mira returns to the dynamo to check its gauge.",
+      "trigger": {"type": "dialogue_visited", "node": "mira_alibi_01"},
+      "effect": {"type": "move_npc", "npc": "iris", "to": "generator_room"}
+    },
+    {
+      "id": "EVT_ADA_LEAVES_ARCHIVE",
+      "description": "After describing the sighting, Ada goes to the entry hall to wait for the lecture party.",
+      "trigger": {"type": "dialogue_visited", "node": "ada_archive_02"},
+      "effect": {"type": "move_npc", "npc": "mara", "to": "entry_hall"}
+    }
+  ]
+}

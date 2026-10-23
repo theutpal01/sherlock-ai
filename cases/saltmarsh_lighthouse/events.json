@@ -1,0 +1,17 @@
+{
+  "comment": "Deterministic world events (case clock / event counter, not wall-clock). Consumed by the world service in Phase 5; validated for reference integrity in Phase 2.",
+  "events": [
+    {
+      "id": "EVT_CORWIN_SUMMONED",
+      "description": "After the dark lamp is found, Corwin climbs to the lamp room to stand his mournful watch.",
+      "trigger": {"type": "evidence_discovered", "evidence": "E_LAMP"},
+      "effect": {"type": "move_npc", "npc": "corwin", "to": "lamp_room"}
+    },
+    {
+      "id": "EVT_FINN_CONFRONT",
+      "description": "After the oily print is found, Finn slinks up to the lamp room to see what it gives away.",
+      "trigger": {"type": "evidence_discovered", "evidence": "E_PRINTS"},
+      "effect": {"type": "move_npc", "npc": "finn", "to": "lamp_room"}
+    }
+  ]
+}

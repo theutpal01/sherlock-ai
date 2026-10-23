@@ -35,6 +35,7 @@ class EvidenceModel(BaseModel):
     title: str = Field(min_length=1)
     description: str = ""
     location: str = Field(min_length=1)
+    category: Literal["key"] | None = None
     requires: list[str] = Field(default_factory=list)
     reveals: list[PredicateModel] = Field(min_length=1)
     discovery: DiscoveryModel
@@ -80,6 +81,8 @@ class DoorModel(BaseModel):
     id: str = Field(min_length=1)
     between: list[str] = Field(min_length=2, max_length=2)
     locked: bool = False
+    unlock_evidence: str | None = None
+    lock_hint: str = ""
     note: str = ""
 
 

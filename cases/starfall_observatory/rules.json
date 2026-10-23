@@ -1,0 +1,83 @@
+{
+  "comment": "Rules may establish possibilities and contradictions, never guilt.",
+  "rules": [
+    {
+      "id": "R_ACCESS_001",
+      "description": "A person with a key that opens a container can access it.",
+      "conditions": [
+        {"name": "has_key", "args": ["?person", "?key"]},
+        {"name": "opens", "args": ["?key", "?container"]}
+      ],
+      "conclusion": {"name": "can_access", "args": ["?person", "?container"]}
+    },
+    {
+      "id": "R_TIME_001",
+      "description": "The log fixes the disappearance time.",
+      "conditions": [{"name": "plate_missing_at", "args": ["?plate", "?time"]}],
+      "conclusion": {"name": "crime_time", "args": ["?time"]}
+    },
+    {
+      "id": "R_TRACK_001",
+      "description": "A matching boot mark places its wearer in the room at the recorded time.",
+      "conditions": [
+        {"name": "footprints_in", "args": ["?room", "?mark"]},
+        {"name": "boot_matches", "args": ["?person", "?mark"]},
+        {"name": "crime_time", "args": ["?time"]}
+      ],
+      "conclusion": {"name": "was_at", "args": ["?person", "?room", "?time"]}
+    },
+    {
+      "id": "R_OPPORTUNITY_001",
+      "description": "Being at the dome when the plate vanished establishes opportunity.",
+      "conditions": [
+        {"name": "was_at", "args": ["?person", "telescope_dome", "?time"]},
+        {"name": "crime_time", "args": ["?time"]}
+      ],
+      "conclusion": {"name": "has_opportunity", "args": ["?person"]}
+    },
+    {
+      "id": "R_MOTIVE_001",
+      "description": "A private debt can supply a financial motive.",
+      "conditions": [{"name": "owes_money", "args": ["?person", "?creditor"]}],
+      "conclusion": {"name": "has_motive", "args": ["?person"]}
+    },
+    {
+      "id": "R_POSSIBLE_001",
+      "description": "Access, opportunity, and motive identify a possible suspect, never guilt.",
+      "conditions": [
+        {"name": "can_access", "args": ["?person", "negative_case"]},
+        {"name": "has_opportunity", "args": ["?person"]},
+        {"name": "has_motive", "args": ["?person"]}
+      ],
+      "conclusion": {"name": "possible_suspect", "args": ["?person"]}
+    },
+    {
+      "id": "R_ALIBI_001",
+      "description": "A claimed archive alibi conflicts with evidence placing the same person in the dome.",
+      "conditions": [
+        {"name": "claims_at", "args": ["?person", "chart_archive", "?time"]},
+        {"name": "was_at", "args": ["?person", "telescope_dome", "?time"]}
+      ],
+      "conclusion": {"name": "alibi_contradicted", "args": ["?person"]}
+    },
+    {
+      "id": "R_MEANS_001",
+      "description": "An unforced lock plus the matching key links its holder to the method.",
+      "conditions": [
+        {"name": "opened_with_key", "args": ["?container"]},
+        {"name": "has_key", "args": ["?person", "?key"]},
+        {"name": "opens", "args": ["?key", "?container"]}
+      ],
+      "conclusion": {"name": "had_means", "args": ["?person", "?container"]}
+    },
+    {
+      "id": "R_HANDLING_001",
+      "description": "Emulsion on gloves identifies who handled the photographic plate.",
+      "conditions": [
+        {"name": "emulsion_on", "args": ["?plate", "?gloves"]},
+        {"name": "gloves_worn_by", "args": ["?gloves", "?person"]}
+      ],
+      "conclusion": {"name": "handled", "args": ["?person", "?plate"]}
+    }
+  ]
+}

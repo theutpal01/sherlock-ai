@@ -1,6 +1,7 @@
 /** Typed event bridge between Phaser and React (spec section 14). */
 export type GameEventType =
   | 'PLAYER_ENTERED_ROOM'
+  | 'PLAYER_FOOTSTEP'
   | 'INTERACTION_AVAILABLE'
   | 'INTERACTION_STARTED'
   | 'EVIDENCE_DISCOVERED'
@@ -11,7 +12,12 @@ export type GameEventType =
   | 'PAUSE_GAME'
   | 'RESUME_GAME'
   | 'INTERACT_PRESSED'
+  | 'NPC_BARK'
+  | 'DOOR_LOCKED'
+  | 'DOOR_UNLOCKED'
+  | 'DOOR_CONFIG_SYNC'
   | 'EVIDENCE_SYNC'
+  | 'OPEN_EVIDENCE_NOTEBOOK'
   | 'CASE_COMPLETED';
 
 export interface GameEvent {

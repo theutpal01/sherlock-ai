@@ -1,0 +1,39 @@
+{
+  "rooms": [
+    {
+      "id": "entry_hall",
+      "name": "Entry Hall",
+      "description": "A narrow stone vestibule where wet coats steam beside a brass weather station. Beyond its arched doors, the dome glows with cold starlight.",
+      "adjacent": ["telescope_dome", "chart_archive"],
+      "spawn": [360, 250]
+    },
+    {
+      "id": "telescope_dome",
+      "name": "Telescope Dome",
+      "description": "A copper-ribbed glass dome above the cloud line. The telescope is still aimed at the turquoise tail of Starfall.",
+      "adjacent": ["entry_hall", "darkroom", "generator_room"],
+      "spawn": [1120, 250]
+    },
+    {
+      "id": "darkroom",
+      "name": "Darkroom",
+      "description": "Red safelights stain the trays and drying racks. The padded sleeve for the comet negative is empty.",
+      "adjacent": ["telescope_dome"],
+      "spawn": [1880, 250]
+    },
+    {
+      "id": "chart_archive",
+      "name": "Chart Archive",
+      "description": "Star charts, accession ledgers, and a locked cabinet line this quiet room. Ink and cedar mask the smell of damp wool.",
+      "adjacent": ["entry_hall", "generator_room"],
+      "spawn": [360, 780]
+    },
+    {
+      "id": "generator_room",
+      "name": "Generator Room",
+      "description": "A compact dynamo hums beneath the observatory. Its brass gauge is steady, and the belt is warm but intact.",
+      "adjacent": ["telescope_dome", "chart_archive"],
+      "spawn": [1120, 780]
+    }
+  ]
+}

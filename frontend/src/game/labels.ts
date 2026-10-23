@@ -82,14 +82,16 @@ export class Plate {
     this.applyAlpha();
   }
 
-  /** Ghost a plate occluded by the player (never combined with found-dim). */
+  /** Soften a plate behind the player — stays legible, yields the front. */
   setDimmed(dimmed: boolean): void {
     this.dimmed = dimmed;
     this.applyAlpha();
   }
 
   private applyAlpha(): void {
-    this.container.setAlpha(this.dimmed ? 0.12 : this.found ? 0.55 : 1);
+    // Ghosted plates stay readable (never below 0.35); the interaction
+    // prompt is exempt from ghosting so it never fades under the player.
+    this.container.setAlpha(this.dimmed ? 0.35 : this.found ? 0.55 : 1);
   }
 
   setTitle(title: string): void {

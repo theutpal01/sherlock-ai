@@ -35,6 +35,7 @@ def next_hint(
     """Return the next ungiven hint, or None when nothing is left."""
     rooms = {room.id: room.name for room in case.rooms}
     npcs = {npc.id: npc.name for npc in case.npcs}
+    reachable_rooms = case.reachable_rooms(discovered)
 
     def room_of(item) -> str:
         return rooms.get(item.location, item.location)
@@ -44,6 +45,8 @@ def next_hint(
         if item.id in discovered or f"examine:{item.id}" in given:
             continue
         if item.discovery.kind != "interact":
+            continue
+        if item.location not in reachable_rooms:
             continue
         if not case.can_discover(item.id, discovered, visited):
             continue
@@ -59,12 +62,15 @@ def next_hint(
     for node in case.dialogues:
         if node.id in visited or node.speaker in seen_speakers:
             continue
-        seen_speakers.add(node.speaker)
         if not all(r in discovered or r in visited for r in node.requires):
             continue
         if f"talk:{node.speaker}" in given:
             continue
-        room = rooms.get(locations.get(node.speaker, ""), "the manor")
+        npc_room = locations.get(node.speaker)
+        if npc_room not in reachable_rooms:
+            continue
+        seen_speakers.add(node.speaker)
+        room = rooms.get(npc_room, "the manor")
         return Hint(
             id=f"talk:{node.speaker}",
             kind="talk",
@@ -76,6 +82,8 @@ def next_hint(
         if item.id in discovered or f"examine:{item.id}" in given:
             continue
         if item.discovery.kind != "interact":
+            continue
+        if item.location not in reachable_rooms:
             continue
         if not case.can_discover(item.id, discovered, visited):
             continue

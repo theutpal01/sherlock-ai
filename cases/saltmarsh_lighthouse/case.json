@@ -1,0 +1,20 @@
+{
+  "id": "saltmarsh_lighthouse",
+  "title": "Saltmarsh Light: The Snuffed Beacon",
+  "description": "The lighthouse lamp went dark just before midnight and a coaster ran aground on the reef. Three souls were on the rock that night. Climb the stair, mind the oil, and let the evidence — not assumptions — name a suspect.",
+  "version": "0.1.0",
+  "start_location": "causeway",
+  "suspects": ["finn", "odda"],
+  "truth": {
+    "culprit": "finn",
+    "summary": "Finn, pressed by the harbormaster over debts he could never repay, drew the spare brass key from his coat, emptied the oil store into a jerrycan to sell ashore, and snuffed the beacon around 23:40. The undamaged store lock, his debts, and Corwin's sighting converge on him. Odda's oily prints are a red herring: she climbed to trim the wick at dusk, then spent the night kneading bread in the galley, flour to the elbows the whole time.",
+    "timeline": [
+      "22:00 - Odda climbs to the lamp room, trims the wick, and descends to the galley.",
+      "22:30 - Corwin locks the oil store with the master key and walks the causeway.",
+      "23:10 - Finn takes the spare brass key from his coat in the bunkroom.",
+      "23:40 - Finn empties the oil store and snuffs the beacon. The lamp goes dark.",
+      "23:45 - The coaster Venture grounds on the reef; the alarm bell rings.",
+      "23:50 - Corwin reaches the lamp room and sees Finn on the stair."
+    ]
+  }
+}

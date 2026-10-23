@@ -1,0 +1,27 @@
+{
+  "npcs": [
+    {"id":"celia","name":"Celia Vale","role":"Conservatory curator","location":"curator_office","description":"A precise botanist whose immaculate cuffs carry a trace of green pollen."},
+    {"id":"rowan","name":"Rowan Pike","role":"Head gardener","location":"boiler_room","description":"A broad-shouldered gardener who knows every pipe and pane in the glasshouse."},
+    {"id":"theo","name":"Theo Finch","role":"Night groundskeeper","location":"fern_corridor","description":"A quiet groundskeeper who patrols the greenhouse paths with a hooded lantern."}
+  ],
+  "objects": [
+    {"id":"orchid_case","room":"orchid_gallery","label":"Empty orchid case","evidence":"E_EMPTY"},
+    {"id":"gallery_lock","room":"orchid_gallery","label":"Case lock and latch","evidence":"E_LOCK"},
+    {"id":"gallery_thermometer","room":"orchid_gallery","label":"Cracked thermometer","evidence":"E_TIME"},
+    {"id":"muddy_tracks","room":"orchid_gallery","label":"Mossy boot impressions","evidence":"E_TRACKS"},
+    {"id":"visitor_book","room":"fern_corridor","label":"Night visitor book","evidence":"E_VISITOR"},
+    {"id":"seed_telegram","room":"curator_office","label":"Telegram from the seed company","evidence":"E_DEBT"},
+    {"id":"key_ledger","room":"curator_office","label":"Greenhouse key ledger","evidence":"E_KEY"},
+    {"id":"curator_gloves","room":"potting_shed","label":"Celia's gardening gloves","evidence":"E_GLOVES"},
+    {"id":"celia_boots","room":"potting_shed","label":"Celia's garden boots","evidence":"E_BOOTS"},
+    {"id":"rowan_log","room":"boiler_room","label":"Boiler pressure log","evidence":"E_BOILER"},
+    {"id":"silver_can","room":"potting_shed","label":"Silver watering can","evidence":"E_ORCHID"}
+  ],
+  "doors": [
+    {"id":"corridor_gallery","between":["fern_corridor","orchid_gallery"],"note":"An iron-framed glass door opens into the orchid gallery."},
+    {"id":"corridor_office","between":["fern_corridor","curator_office"],"note":"A narrow door leads to the curator's office."},
+    {"id":"office_shed","between":["curator_office","potting_shed"],"locked":true,"unlock_evidence":"E_KEY","lock_hint":"The greenhouse master key recorded in the ledger should fit this lock.","note":"The potting shed door is locked from the office side."},
+    {"id":"corridor_boiler","between":["fern_corridor","boiler_room"],"note":"A low iron door opens into the boiler room."},
+    {"id":"shed_boiler","between":["potting_shed","boiler_room"],"note":"A service arch joins the potting benches to the boiler."}
+  ]
+}

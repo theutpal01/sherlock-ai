@@ -39,7 +39,7 @@
     {"id": "mended_curtain", "room": "workshop", "label": "Mended curtain panel", "evidence": "E_CURTAIN"}
   ],
   "doors": [
-    {"id": "stage_door", "between": ["stage", "dressing"], "locked": false, "note": "Unlocked in v1; lock mechanics are a future milestone."},
+    {"id": "stage_door", "between": ["stage", "dressing"], "locked": true, "unlock_evidence": "E_NELL_KEY", "lock_hint": "Nell has the dressing-room key", "note": "Nell lends the dressing-room key after sharing her testimony."},
     {"id": "workshop_door", "between": ["stage", "workshop"], "locked": false, "note": "Paint-spattered door behind the wings."}
   ]
 }

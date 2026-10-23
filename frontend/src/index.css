@@ -68,3 +68,112 @@ aside h2 {
 .pixel-img {
   image-rendering: pixelated;
 }
+
+/* --- Motion. All entrance/flash animations opt in via these classes and
+ * are suppressed entirely when the user prefers reduced motion, so the
+ * content still appears instantly and statically as the accessible default. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes press-blink {
+    0%,
+    60% {
+      opacity: 1;
+    }
+    61%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes streak-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.12);
+    }
+  }
+
+  @keyframes sheen {
+    from {
+      transform: translateX(-120%) skewX(-18deg);
+    }
+    to {
+      transform: translateX(240%) skewX(-18deg);
+    }
+  }
+
+  .anim-fade-up {
+    animation: fade-up 0.4s ease-out both;
+  }
+
+  .anim-press-blink {
+    animation: press-blink 1.6s steps(1) infinite;
+  }
+
+  .anim-toast {
+    animation: toast-in 0.25s ease-out both;
+  }
+
+  .anim-streak-pulse {
+    animation: streak-pulse 0.4s ease-out;
+  }
+
+  .anim-sheen {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .anim-sheen::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14), transparent);
+    animation: sheen 2.6s ease-in-out infinite;
+  }
+}
+
+/* Visible keyboard focus everywhere: the pixel borders alone don't signal
+ * focus, so every focusable element gets an amber ring when tabbed to.
+ * Mouse users are unaffected (`:focus-visible`, not `:focus`). */
+:focus-visible {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
+}
+
+/* Card hover lift: subtle, safe in reduced motion (transform-only, no layout). */
+.case-card {
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out, border-color 0.15s ease-out;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .case-card:hover {
+    transform: translateY(-3px);
+    border-color: #92400e;
+  }
+}

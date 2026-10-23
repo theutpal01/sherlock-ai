@@ -1,0 +1,20 @@
+{
+  "id": "starfall_observatory",
+  "title": "Starfall Observatory: The Vanishing Comet Plate",
+  "description": "On the clearest night in a decade, the glass negative of a returning comet vanished from the mountain observatory. A locked dome, a borrowed key, a debt cable, and one impossible alibi point in different directions. Reconstruct the final quarter-hour before the lecture begins.",
+  "version": "0.1.0",
+  "start_location": "entry_hall",
+  "suspects": ["scholar", "iris"],
+  "truth": {
+    "culprit": "scholar",
+    "summary": "Dr. Elias Vane borrowed the duplicate dome key, removed the comet negative at 22:45, and hid it inside a discarded plate sleeve in the darkroom. He planned to sell the image to a publisher to settle a private debt. Ada's sighting, the dome-key register, the blue-silica boot match, and his contradicted archive alibi converge on him. Mira's generator grease and presence near the dome are innocent: the dynamo stayed steady and she remained at her station.",
+    "timeline": [
+      "21:50 - Ada seals the comet negative into the padded plate case before the public lecture.",
+      "22:20 - Elias signs out the duplicate dome key from the chart-archive register.",
+      "22:35 - Elias receives a cable from a publisher demanding repayment for an advance.",
+      "22:45 - Elias removes the negative from the plate case and carries it through the dome.",
+      "22:52 - Ada sees Elias leaving the dome with an empty sleeve.",
+      "23:00 - The observatory opens its lecture room; the negative is found missing."
+    ]
+  }
+}

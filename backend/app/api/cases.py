@@ -10,6 +10,7 @@ legitimate session discovery.
 
 from __future__ import annotations
 
+from datetime import UTC, datetime
 from functools import lru_cache
 from pathlib import Path
 
@@ -18,6 +19,7 @@ from fastapi import APIRouter, HTTPException
 from ..services.case_loader import (
     CaseValidationError,
     LoadedCase,
+    diagnose_case,
     list_cases,
     load_case,
 )
@@ -58,6 +60,71 @@ def _summary(case: LoadedCase) -> dict:
 @router.get("")
 def get_cases() -> dict:
     return {"cases": [_summary(case) for case in list_cases(cases_dir())]}
+
+
+@router.get("/daily")
+def get_daily_case() -> dict:
+    """Deterministic case-of-the-day (spoiler-safe summary + seed).
+
+    Index is derived from the calendar date over the sorted case list, so
+    every client agrees without coordination. The seed drives a repeatable
+    daily NPC stand-spot arrangement in the client; it changes no case truth.
+    """
+    cases = list_cases(cases_dir())
+    if not cases:
+        raise HTTPException(status_code=404, detail="No cases available")
+    today = datetime.now(UTC).date()
+    seed = today.toordinal()
+    case = cases[seed % len(cases)]
+    return {"date": today.isoformat(), "seed": seed, **_summary(case)}
+
+
+@router.get("/{case_id}/validate")
+def validate_case(case_id: str) -> dict:
+    """Report structural validation and case progression diagnostics.
+
+    Structural violations prevent loading. Progression issues are returned
+    as diagnostics so case authors can repair dead ends before release.
+    """
+    directory = cases_dir() / case_id
+    if not directory.is_dir():
+        raise HTTPException(status_code=404, detail=f"Unknown case: {case_id}")
+    try:
+        # Bypass the session cache so edits made during authoring are checked
+        # by the next validation request.
+        case = load_case(directory)
+    except CaseValidationError as exc:
+        return {
+            "id": case_id,
+            "valid": False,
+            "diagnostics": [
+                {
+                    "severity": "error",
+                    "code": "structural_error",
+                    "id": case_id,
+                    "message": str(exc),
+                }
+            ],
+            "counts": {},
+        }
+    diagnostics = diagnose_case(case)
+    return {
+        "id": case.meta.id,
+        "valid": not any(item["severity"] == "error" for item in diagnostics),
+        "diagnostics": diagnostics,
+        "counts": {
+            "rooms": len(case.rooms),
+            "npcs": len(case.npcs),
+            "objects": len(case.objects),
+            "doors": len(case.doors),
+            "evidence": len(case.evidence),
+            "dialogues": len(case.dialogues),
+            "facts": len(case.case_facts),
+            "rules": len(case.rules),
+            "events": len(case.events),
+            "suspects": len(case.meta.suspects),
+        },
+    }
 
 
 @router.get("/{case_id}")

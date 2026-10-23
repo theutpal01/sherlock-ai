@@ -1,0 +1,10 @@
+{
+  "comment":"Background facts only. Stolen-item details and suspect links enter the player knowledge only through discovered clues.",
+  "case_facts":[
+    {"name":"contains","args":["orchid_case","moon_orchid"]},
+    {"name":"opens","args":["greenhouse_key","orchid_case"]},
+    {"name":"opens","args":["greenhouse_key","potting_shed_door"]},
+    {"name":"has_key","args":["rowan","boiler_key"]},
+    {"name":"opens","args":["boiler_key","boiler_room"]}
+  ]
+}

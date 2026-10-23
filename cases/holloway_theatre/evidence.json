@@ -67,6 +67,16 @@
       "note": "Testimony, not objective truth: the source is recorded and it only feeds rules alongside other facts."
     },
     {
+      "id": "E_NELL_KEY",
+      "title": "Nell's Dressing-Room Key",
+      "description": "After telling you she saw Vera in the dressing room, Nell lends you the key and authorizes a search for the violin.",
+      "location": "stage",
+      "category": "key",
+      "requires": ["nell_bell_02"],
+      "discovery": {"kind": "dialogue", "node_id": "nell_bell_02"},
+      "reveals": [{"name": "has_key", "args": ["player", "dressing_room_key"]}]
+    },
+    {
       "id": "E_CLAIM_OTTO",
       "title": "Otto's Alibi Claim",
       "description": "Otto insists he spent the whole evening in the alley and never went inside.",

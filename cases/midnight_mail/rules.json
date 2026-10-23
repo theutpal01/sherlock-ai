@@ -1,0 +1,15 @@
+{
+  "comment":"Rules establish theories and contradictions, never guilt.",
+  "rules":[
+    {"id":"R_STOP_001","description":"A scheduled signal stop creates a window for access.","conditions":[{"name":"train_stopped","args":["?place","?start","?end"]}],"conclusion":{"name":"opportunity_window","args":["?start","?end"]}},
+    {"id":"R_KEY_001","description":"A recorded key holder can enter the locked van.","conditions":[{"name":"had_key","args":["?person","?key"]},{"name":"opens","args":["?key","guard_van"]}],"conclusion":{"name":"can_access","args":["?person","guard_van"]}},
+    {"id":"R_PACKET_001","description":"Signing for the packet establishes prior custody, not theft.","conditions":[{"name":"handled_by","args":["?person","diplomatic_dispatch"]}],"conclusion":{"name":"had_custody","args":["?person","diplomatic_dispatch"]}},
+    {"id":"R_METHOD_001","description":"A remade seal and matching tool mark support the same method.","conditions":[{"name":"seal_remade","args":["dispatch_pouch"]},{"name":"mark_matches","args":["crescent_nick","clerk_punch"]}],"conclusion":{"name":"method_consistent_with","args":["clerk_punch","dispatch_pouch"]}},
+    {"id":"R_MOTIVE_001","description":"A debt tied to a promised sale can supply a financial motive.","conditions":[{"name":"owes_money","args":["?person","?creditor"]}],"conclusion":{"name":"has_motive","args":["?person"]}},
+    {"id":"R_THEORY_001","description":"Access, custody, a stop window, and motive make a possible suspect, never a proven culprit.","conditions":[{"name":"can_access","args":["?person","guard_van"]},{"name":"had_custody","args":["?person","diplomatic_dispatch"]},{"name":"has_motive","args":["?person"]},{"name":"opportunity_window","args":["?start","?end"]}],"conclusion":{"name":"possible_suspect","args":["?person"]}},
+    {"id":"R_TIME_001","description":"The intact and altered seal entries narrow the theft window.","conditions":[{"name":"seal_changed_between","args":["?start","?end"]}],"conclusion":{"name":"crime_window","args":["?start","?end"]}},
+    {"id":"R_ALIBI_001","description":"A claim of remaining in the postal carriage conflicts with evidence of access to the guard's van during the stop.","conditions":[{"name":"claims_at","args":["?person","postal_carriage","?time"]},{"name":"had_key","args":["?person","guard_van_key"]},{"name":"was_at","args":["?person","guard_van","?time"]}],"conclusion":{"name":"alibi_questioned","args":["?person"]}},
+    {"id":"R_EXCLUDE_001","description":"A square punch cannot create the crescent nick.","conditions":[{"name":"punch_shape","args":["?person","square"]},{"name":"mark_matches","args":["crescent_nick","clerk_punch"]}],"conclusion":{"name":"tool_inconsistent","args":["?person","clerk_punch"]}},
+    {"id":"R_HANDLING_001","description":"Wax on a person's gloves links them to handling the resealed pouch, not necessarily its theft.","conditions":[{"name":"wax_on","args":["?person","?gloves"]},{"name":"seal_remade","args":["dispatch_pouch"]}],"conclusion":{"name":"handled_seal","args":["?person","dispatch_pouch"]}}
+  ]
+}

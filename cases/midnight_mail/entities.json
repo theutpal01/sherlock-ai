@@ -1,0 +1,30 @@
+{
+  "npcs": [
+    {"id":"ada","name":"Ada Bell","role":"Royal Mail clerk","location":"postal_carriage","description":"An exacting clerk with ink-dark cuffs and a silver watch chain."},
+    {"id":"arthur","name":"Arthur Rook","role":"Train guard","location":"guard_van","description":"A veteran guard who treats the sealing ledger as sacred."},
+    {"id":"finn","name":"Finn Mercer","role":"Platform porter","location":"victoria_platform","description":"A quick-handed porter who knows every luggage trunk by sight."}
+  ],
+  "objects": [
+    {"id":"empty_pouch","room":"postal_carriage","label":"Empty dispatch pouch","evidence":"E_POUCH"},
+    {"id":"wax_seal","room":"postal_carriage","label":"Remade wax seal","evidence":"E_SEAL"},
+    {"id":"ticket_punch","room":"postal_carriage","label":"Brass ticket punch","evidence":"E_PUNCH"},
+    {"id":"sorting_list","room":"postal_carriage","label":"Sorting list","evidence":"E_SORT"},
+    {"id":"guard_ledger","room":"guard_van","label":"Seal ledger","evidence":"E_LEDGER"},
+    {"id":"van_key","room":"conductor_cabin","label":"Van key register","evidence":"E_KEY"},
+    {"id":"signal_notice","room":"conductor_cabin","label":"Redbridge signal notice","evidence":"E_STOP"},
+    {"id":"debt_letter","room":"dining_car","label":"Letter tucked beneath the saucer","evidence":"E_MOTIVE"},
+    {"id":"finn_punch","room":"victoria_platform","label":"Porter's ticket punch","evidence":"E_FINN_PUNCH"},
+    {"id":"station_clock","room":"victoria_platform","label":"Station clock record","evidence":"E_CLOCK"},
+    {"id":"scratched_trunk","room":"luggage_car","label":"Scratched railway trunk","evidence":"E_TRUNK"},
+    {"id":"coal_gloves","room":"guard_van","label":"Coal-stained gloves","evidence":"E_GLOVES"}
+  ],
+  "doors": [
+    {"id":"platform_postal","between":["victoria_platform","postal_carriage"],"note":"A sliding door joins the platform to the postal carriage."},
+    {"id":"platform_dining","between":["victoria_platform","dining_car"],"note":"The dining car opens onto the platform."},
+    {"id":"platform_cabin","between":["victoria_platform","conductor_cabin"],"note":"The conductor's cabin is accessible from the platform."},
+    {"id":"postal_guard","between":["postal_carriage","guard_van"],"locked":true,"unlock_evidence":"E_KEY","lock_hint":"The guard's van key should open this heavy door.","note":"The guard's van is locked from the mail side."},
+    {"id":"postal_luggage","between":["postal_carriage","luggage_car"],"note":"A narrow passage leads to the luggage car."},
+    {"id":"guard_luggage","between":["guard_van","luggage_car"],"note":"The guard's van connects to the luggage car."},
+    {"id":"dining_cabin","between":["dining_car","conductor_cabin"],"note":"A service door joins the dining car to the conductor's cabin."}
+  ]
+}

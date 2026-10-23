@@ -13,7 +13,7 @@ export interface RoomLayout {
   h: number;
   floorStyle: FloorStyle;
   wallStyle: WallStyle;
-  decor?: Array<{ tex: string; x: number; y: number; scale?: number }>;
+  decor?: Array<{ tex: string; x: number; y: number; scale?: number; solid?: boolean }>;
 }
 
 export interface DoorLayout {
@@ -28,7 +28,6 @@ export interface DoorLayout {
 }
 
 export type ObjectSprite =
-  | { kind: 'frame'; frame: number }
   | { kind: 'texture'; key: string }
   | { kind: 'image'; key: string };
 

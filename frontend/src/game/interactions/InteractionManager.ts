@@ -11,6 +11,8 @@ export interface InteractableEntry {
   x: number;
   y: number;
   radius: number;
+  /** Read moving interactables at their current world position. */
+  getPosition?: () => { x: number; y: number };
 }
 
 export interface ActiveInteraction extends InteractableEntry {}
@@ -44,26 +46,60 @@ export class InteractionManager {
   bind(entries: InteractableEntry[], player: Player): void {
     this.entries = entries;
     this.player = player;
-    this.current = null;
+    const current = this.current;
+    if (!current) return;
+    const rebound = entries.find(
+      (entry) => entry.kind === current.kind && entry.id === current.id,
+    );
+    this.current = rebound ? this.resolvePosition(rebound) : null;
+    if (!rebound) {
+      gameEvents.emit({
+        type: 'INTERACTION_AVAILABLE',
+        payload: { kind: null, id: null },
+      });
+    }
   }
 
-  update(): void {
+  update(roomId: string): void {
     if (!this.player) return;
     let best: ActiveInteraction | null = null;
     let bestDist = Number.POSITIVE_INFINITY;
     for (const entry of this.entries) {
-      const dist = Phaser.Math.Distance.Between(this.player.x, this.player.y, entry.x, entry.y);
+      if (entry.roomId !== roomId) continue;
+      const positioned = this.resolvePosition(entry);
+      const dist = Phaser.Math.Distance.Between(this.player.x, this.player.y, positioned.x, positioned.y);
       if (dist <= entry.radius && dist < bestDist) {
         bestDist = dist;
-        best = { ...entry };
+        best = positioned;
       }
     }
-    const changed = (best?.id ?? null) !== (this.current?.id ?? null);
+    const changed =
+      best?.kind !== this.current?.kind || best?.id !== this.current?.id;
     this.current = best;
     if (best && this.player) {
       const verb = best.kind === 'npc' ? 'TALK TO' : 'EXAMINE';
-      this.prompt.setPosition(this.player.x, this.player.y - 34);
-      this.prompt.setText(`[E] ${verb} ${best.label.toUpperCase()}`);
+      const hasController = Boolean(this.scene.input.gamepad?.pad1?.connected);
+      const hasTouch = this.scene.sys.game.device.input.touch;
+      const inputHint = hasTouch && hasController
+        ? '[TAP/E/A/X]'
+        : hasTouch
+          ? '[TAP/E]'
+          : hasController
+            ? '[E/A/X]'
+            : '[E]';
+      this.prompt.setText(`${inputHint} ${verb} ${best.label.toUpperCase()}`);
+      const view = this.scene.cameras.main.worldView;
+      const margin = 8;
+      const halfWidth = this.prompt.width / 2;
+      const x = view.width >= this.prompt.width + margin * 2
+        ? Phaser.Math.Clamp(this.player.x, view.left + halfWidth + margin, view.right - halfWidth - margin)
+        : view.centerX;
+      const minY = view.top + this.prompt.height + margin;
+      const maxY = view.bottom - margin;
+      const y = minY <= maxY
+        ? Phaser.Math.Clamp(this.player.y - 34, minY, maxY)
+        : view.centerY;
+      this.prompt.setPosition(x, y);
       this.prompt.setVisible(true);
     } else {
       this.prompt.setVisible(false);
@@ -87,6 +123,8 @@ export class InteractionManager {
 
   /** Start an interaction with an explicit entry (tap-to-examine path). */
   interactWith(entry: InteractableEntry): void {
+    const positioned = this.resolvePosition(entry);
+    this.player?.faceToward(positioned.x, positioned.y);
     if (entry.kind === 'npc') {
       gameEvents.emit({
         type: 'NPC_DIALOGUE_STARTED',
@@ -98,5 +136,9 @@ export class InteractionManager {
         payload: { objectId: entry.id, roomId: entry.roomId, label: entry.label },
       });
     }
+  }
+
+  private resolvePosition(entry: InteractableEntry): ActiveInteraction {
+    return { ...entry, ...(entry.getPosition?.() ?? {}) };
   }
 }

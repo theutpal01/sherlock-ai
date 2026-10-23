@@ -1,0 +1,10 @@
+{
+  "comment": "Background the detective knows at case start. Never conclusions, never testimony, never the truth block.",
+  "case_facts": [
+    {"name": "contains", "args": ["oil_store", "beacon_oil"]},
+    {"name": "opens", "args": ["master_key", "oil_store"]},
+    {"name": "opens", "args": ["brass_key", "oil_store"]},
+    {"name": "has_key", "args": ["corwin", "master_key"]},
+    {"name": "keeps", "args": ["corwin", "beacon"]}
+  ]
+}

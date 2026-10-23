@@ -1,0 +1,20 @@
+{
+  "id": "midnight_mail",
+  "title": "The Midnight Mail: The Sealed Pouch",
+  "description": "A packet of diplomatic dispatches vanishes from the locked mail van during the midnight run to Dover. The broken seal, a mispunched route ticket, and a brief signal stop point to someone aboard the train. Trace the packet before the dawn ferry sails.",
+  "version": "0.1.0",
+  "start_location": "victoria_platform",
+  "suspects": ["ada", "finn"],
+  "truth": {
+    "culprit": "ada",
+    "summary": "Mail clerk Ada Bell used the van key during the unscheduled signal stop. She cut and remade the wax seal, then hid the dispatch pouch inside the locked luggage trunk. A duplicate ticket punch and her debt to a foreign agent reveal motive and method. Porter Finn carried a similar punch but his station record places him elsewhere.",
+    "timeline": [
+      "23:35 - Ada signs the sealed diplomatic pouch into the mail van.",
+      "23:48 - The express stops at Redbridge signal for seven minutes.",
+      "23:51 - Ada enters the locked van with the duplicate key.",
+      "23:54 - The pouch is hidden inside the railway trunk.",
+      "00:05 - Guard Arthur notices the seal has been remade.",
+      "00:20 - The train reaches Dover with the trunk still aboard."
+    ]
+  }
+}

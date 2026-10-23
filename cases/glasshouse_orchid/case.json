@@ -1,0 +1,20 @@
+{
+  "id": "glasshouse_orchid",
+  "title": "The Glasshouse Orchid: A Petal Gone at Midnight",
+  "description": "During a midnight storm, the rare Moon Orchid disappears from its locked glass case at Wrenmere Conservatory. Muddy impressions, a broken thermometer, a debt telegram, and a gardener's ledger tell different stories. Find who had the means and the quiet hour to take it.",
+  "version": "0.1.0",
+  "start_location": "fern_corridor",
+  "suspects": ["celia", "rowan"],
+  "truth": {
+    "culprit": "celia",
+    "summary": "Curator Celia Vale used her recorded greenhouse key to open the orchid case shortly before midnight. She had promised the Moon Orchid to a private collector to settle an advance from a seed company. Her moss-marked boots and pollen-stained gloves connect her to the gallery, while the boiler log and Theo's sighting undermine her claim that she stayed in the office. She hid the orchid inside the silver watering can in the potting shed.",
+    "timeline": [
+      "22:10 - Rowan checks the boiler before the storm reaches Wrenmere.",
+      "23:20 - Celia signs the greenhouse key out of the curator's office.",
+      "23:35 - Celia opens the orchid case and removes the Moon Orchid.",
+      "23:40 - The gallery thermometer cracks as a gust rattles the glass roof.",
+      "23:45 - Theo sees Celia leave the gallery carrying the silver watering can.",
+      "23:55 - Celia hides the orchid in the potting shed before the theft is discovered."
+    ]
+  }
+}

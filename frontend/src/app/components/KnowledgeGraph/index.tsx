@@ -63,6 +63,7 @@ export default function KnowledgeGraph({
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
   const [hover, setHover] = useState<string | null>(null);
+  const [focusedNode, setFocusedNode] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [layoutMode, setLayoutMode] = useState<LayoutMode>('rings');
   const [cats, setCats] = useState<Record<EdgeCat, boolean>>({
@@ -75,6 +76,13 @@ export default function KnowledgeGraph({
   const svgRef = useRef<SVGSVGElement>(null);
   const panRef = useRef<{ sx: number; sy: number; vx: number; vy: number } | null>(null);
   const dragMovedRef = useRef(false);
+  const spacePressedNodeRef = useRef<string | null>(null);
+
+  const focusGraphNode = (id: string) => {
+    const nodes = svgRef.current?.querySelectorAll<SVGGElement>('[data-graph-node]');
+    const target = Array.from(nodes ?? []).find((node) => node.dataset.graphNode === id);
+    (target ?? svgRef.current)?.focus();
+  };
 
   useEffect(() => {
     if (!sessionId) return;
@@ -90,6 +98,7 @@ export default function KnowledgeGraph({
         if (!cancelled) {
           setData(g);
           setSelected(null);
+          setFocusedNode(null);
           setView(null);
         }
       })
@@ -205,32 +214,53 @@ export default function KnowledgeGraph({
   const exportPng = () => {
     const svg = svgRef.current;
     if (!svg) return;
-    const xml = new XMLSerializer().serializeToString(svg);
+    const { width: viewWidth, height: viewHeight } = svg.viewBox.baseVal;
+    const exportSvg = svg.cloneNode(true) as SVGSVGElement;
+    exportSvg.setAttribute('width', String(viewWidth));
+    exportSvg.setAttribute('height', String(viewHeight));
+    const xml = new XMLSerializer().serializeToString(exportSvg);
     const img = new Image();
+    const svgUrl = URL.createObjectURL(new Blob([xml], { type: 'image/svg+xml' }));
     img.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = 1600;
-      canvas.height = 1200;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-      ctx.fillStyle = '#0c0a09';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      const a = document.createElement('a');
-      a.href = canvas.toDataURL('image/png');
-      a.download = 'case-graph.png';
-      a.click();
-      URL.revokeObjectURL(img.src);
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1600;
+        canvas.height = 1200;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        ctx.fillStyle = '#0c0a09';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const scale = Math.min(canvas.width / viewWidth, canvas.height / viewHeight);
+        const width = viewWidth * scale;
+        const height = viewHeight * scale;
+        ctx.drawImage(img, (canvas.width - width) / 2, (canvas.height - height) / 2, width, height);
+        const a = document.createElement('a');
+        a.href = canvas.toDataURL('image/png');
+        a.download = 'case-graph.png';
+        a.hidden = true;
+        document.body.appendChild(a);
+        try {
+          a.click();
+        } finally {
+          a.remove();
+        }
+      } finally {
+        URL.revokeObjectURL(svgUrl);
+      }
     };
-    img.src = URL.createObjectURL(new Blob([xml], { type: 'image/svg+xml' }));
+    img.onerror = () => URL.revokeObjectURL(svgUrl);
+    img.src = svgUrl;
   };
 
-  if (!sessionId) return <p className="text-sm text-stone-500">Starting session…</p>;
-  if (loading && !data) return <p className="text-sm text-stone-500">Drawing graph…</p>;
+  if (!sessionId) return <p className="text-sm text-stone-400">Starting session…</p>;
+  if (loading && !data) return <p className="text-sm text-stone-400">Drawing graph…</p>;
   if (error) return <p className="text-sm text-red-300" role="alert">{error}</p>;
   if (!data || !layout || !effectiveView) return null;
 
-  const focusId = hover ?? selected;
+  const focusId = hover ?? selected ?? focusedNode;
+  const rovingNodeId = visible.nodes.some((node) => node.id === focusedNode)
+    ? focusedNode
+    : visible.nodes[0]?.id;
   const selIncident = new Set<string>();
   if (selected) {
     for (const l of incident(selected)) {
@@ -261,21 +291,21 @@ export default function KnowledgeGraph({
           }}
           placeholder="Find node…"
           aria-label="Find graph node"
-          className="w-32 rounded border border-stone-700 bg-stone-900 px-2 py-1 text-xs text-stone-100"
+          className="min-h-11 w-32 rounded border border-stone-700 bg-stone-900 px-2 py-1 text-xs text-stone-100"
         />
         <button
           onClick={() => setLayoutMode(layoutMode === 'circle' ? 'rings' : 'circle')}
-          className="rounded border border-stone-700 px-2 py-1 text-xs text-stone-300 hover:bg-stone-800"
+          className="min-h-11 rounded border border-stone-700 px-2 py-1 text-xs text-stone-300 hover:bg-stone-800"
           title="Toggle node layout"
         >
-          {layoutMode === 'circle' ? '◉ Rings' : '○ Circle'}
+          {layoutMode === 'circle' ? 'Rings' : 'Circle'}
         </button>
-        <button onClick={() => zoomAt(0.8)} className="rounded border border-stone-700 px-2 py-1 text-xs text-stone-300 hover:bg-stone-800" aria-label="Zoom in">+</button>
-        <button onClick={() => zoomAt(1.25)} className="rounded border border-stone-700 px-2 py-1 text-xs text-stone-300 hover:bg-stone-800" aria-label="Zoom out">−</button>
-        <button onClick={() => setView(null)} className="rounded border border-stone-700 px-2 py-1 text-xs text-stone-300 hover:bg-stone-800" title="Fit whole graph">
+        <button onClick={() => zoomAt(0.8)} className="min-h-11 min-w-11 rounded border border-stone-700 px-2 py-1 text-xs text-stone-300 hover:bg-stone-800" aria-label="Zoom in">+</button>
+        <button onClick={() => zoomAt(1.25)} className="min-h-11 min-w-11 rounded border border-stone-700 px-2 py-1 text-xs text-stone-300 hover:bg-stone-800" aria-label="Zoom out">−</button>
+        <button onClick={() => setView(null)} className="min-h-11 rounded border border-stone-700 px-2 py-1 text-xs text-stone-300 hover:bg-stone-800" title="Fit whole graph">
           Fit
         </button>
-        <button onClick={exportPng} className="rounded border border-stone-700 px-2 py-1 text-xs text-stone-300 hover:bg-stone-800" title="Download board as PNG">
+        <button onClick={exportPng} className="min-h-11 rounded border border-stone-700 px-2 py-1 text-xs text-stone-300 hover:bg-stone-800" title="Download board as PNG">
           PNG
         </button>
       </div>
@@ -285,8 +315,8 @@ export default function KnowledgeGraph({
             key={cat}
             onClick={() => setCats((c) => ({ ...c, [cat]: !c[cat] }))}
             aria-pressed={cats[cat]}
-            className={`rounded border px-2 py-0.5 ${
-              cats[cat] ? 'border-stone-600 text-stone-200' : 'border-stone-800 text-stone-600 line-through'
+            className={`min-h-11 rounded border px-2 py-0.5 ${
+              cats[cat] ? 'border-stone-600 text-stone-200' : 'border-stone-800 text-stone-400 line-through'
             }`}
           >
             <span style={{ color: CAT_COLOR[cat] }}>—</span> {cat}
@@ -295,18 +325,19 @@ export default function KnowledgeGraph({
         <button
           onClick={() => setShowFacts((s) => !s)}
           aria-pressed={showFacts}
-          className={`rounded border px-2 py-0.5 ${
-            showFacts ? 'border-stone-600 text-stone-200' : 'border-stone-800 text-stone-600 line-through'
+          className={`min-h-11 rounded border px-2 py-0.5 ${
+            showFacts ? 'border-stone-600 text-stone-200' : 'border-stone-800 text-stone-400 line-through'
           }`}
         >
-          <span className="text-violet-400">●</span> fact-nodes
+          <span aria-hidden="true" className="inline-block h-2 w-2 rounded-full bg-violet-400" /> Fact nodes
         </button>
       </div>
       <svg
         ref={svgRef}
         viewBox={`${effectiveView.x} ${effectiveView.y} ${effectiveView.w} ${effectiveView.h}`}
         className="max-h-96 w-full cursor-grab rounded border border-stone-800 bg-stone-950 active:cursor-grabbing"
-        role="img"
+        role="group"
+        tabIndex={-1}
         aria-label="Case knowledge graph. Drag to pan, scroll to zoom."
         onPointerDown={(e) => {
           (e.target as Element).setPointerCapture?.(e.pointerId);
@@ -328,6 +359,7 @@ export default function KnowledgeGraph({
           if (Math.abs(e.clientX - pan.sx) + Math.abs(e.clientY - pan.sy) > 4) {
             dragMovedRef.current = true;
           }
+          if (!dragMovedRef.current) return;
           setView((v) => {
             const base = v ?? layout.bounds;
             return { ...base, x: pan.vx - dx, y: pan.vy - dy };
@@ -335,6 +367,10 @@ export default function KnowledgeGraph({
         }}
         onPointerUp={() => {
           panRef.current = null;
+        }}
+        onPointerCancel={() => {
+          panRef.current = null;
+          dragMovedRef.current = false;
         }}
       >
         {visible.links.map((link, i) => {
@@ -364,12 +400,14 @@ export default function KnowledgeGraph({
           if (!p) return null;
           const fact = isFactNode(n);
           const active = selected === n.id;
+          const focused = focusedNode === n.id;
           const dimmed =
             selected !== null && !active && !selIncident.has(n.id);
           const short = n.id.length > 22 ? `${n.id.slice(0, 21)}…` : n.id;
           return (
             <g
               key={n.id}
+              data-graph-node={n.id}
               opacity={dimmed ? 0.3 : 1}
               onClick={() => {
                 if (dragMovedRef.current) {
@@ -380,22 +418,63 @@ export default function KnowledgeGraph({
               }}
               onMouseEnter={() => setHover(n.id)}
               onMouseLeave={() => setHover((h) => (h === n.id ? null : h))}
+              onFocus={() => setFocusedNode(n.id)}
+              onBlur={() => setFocusedNode((current) => (current === n.id ? null : current))}
               onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
+                const currentIndex = visible.nodes.findIndex((node) => node.id === n.id);
+                let nextIndex: number | null = null;
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                  nextIndex = (currentIndex + 1) % visible.nodes.length;
+                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                  nextIndex = (currentIndex - 1 + visible.nodes.length) % visible.nodes.length;
+                } else if (e.key === 'Home') {
+                  nextIndex = 0;
+                } else if (e.key === 'End') {
+                  nextIndex = visible.nodes.length - 1;
+                }
+                if (nextIndex !== null) {
+                  e.preventDefault();
+                  focusGraphNode(visible.nodes[nextIndex].id);
+                  return;
+                }
+                if (e.key === 'Enter' && !e.repeat) {
                   e.preventDefault();
                   setSelected(active ? null : n.id);
+                } else if (e.key === ' ') {
+                  e.preventDefault();
+                  spacePressedNodeRef.current = n.id;
+                }
+              }}
+              onKeyUp={(e) => {
+                if (e.key === ' ') {
+                  e.preventDefault();
+                  const pressedNode = spacePressedNodeRef.current;
+                  spacePressedNodeRef.current = null;
+                  if (pressedNode === n.id) setSelected(active ? null : n.id);
                 }
               }}
               role="button"
-              tabIndex={0}
+              tabIndex={n.id === rovingNodeId ? 0 : -1}
+              aria-pressed={active}
               aria-label={`Inspect relations of ${n.id}`}
               style={{ cursor: 'pointer' }}
             >
               <circle
+                cx={p.x}
+                cy={p.y}
+                r={1}
+                fill="transparent"
+                stroke="transparent"
+                strokeWidth={44}
+                vectorEffect="non-scaling-stroke"
+                pointerEvents="all"
+                aria-hidden="true"
+              />
+              <circle
                 cx={p.x} cy={p.y} r={active || focusId === n.id ? 12 : 9}
                 fill={fact ? '#8b5cf6' : '#0ea5e9'}
-                stroke={active ? '#fff' : focusId === n.id ? '#e7e5e4' : 'none'}
-                strokeWidth={1.5}
+                stroke={active || focused ? '#fff' : focusId === n.id ? '#e7e5e4' : 'none'}
+                strokeWidth={active ? 2 : focused ? 3 : 1.5}
               >
                 <title>{n.id}</title>
               </circle>
@@ -410,12 +489,18 @@ export default function KnowledgeGraph({
         <NodeInspector
           id={selected}
           data={data}
-          onJump={setSelected}
-          onClose={() => setSelected(null)}
+          onJump={(id) => {
+            setSelected(id);
+            focusGraphNode(id);
+          }}
+          onClose={() => {
+            setSelected(null);
+            focusGraphNode(selected);
+          }}
         />
       ) : (
-        <p className="mt-1 text-xs text-stone-500">
-          {visible.nodes.length} nodes · {visible.links.length} links — drag to pan, scroll to zoom, click a node to inspect.
+        <p className="mt-1 text-xs text-stone-400">
+          {visible.nodes.length} nodes · {visible.links.length} links — click or tap a node to inspect; drag to pan; use +/− or scroll to zoom; Tab to a node, use arrow keys to move between nodes, and press Enter or Space to inspect.
         </p>
       )}
     </div>
@@ -442,16 +527,18 @@ function NodeInspector({
       <div className="flex items-center justify-between gap-2">
         <p className="font-mono text-xs text-stone-200">
           {id}{' '}
-          <span className="text-stone-500">
+          <span className="text-stone-400">
             {factNode ? `(fact${legend ? `: ${legend.label}` : ''})` : '(entity)'}
           </span>
         </p>
         <button
           onClick={onClose}
-          className="rounded border border-stone-700 px-2 py-0.5 text-xs text-stone-300 hover:bg-stone-800"
+          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded border border-stone-700 px-2 py-0.5 text-stone-300 hover:bg-stone-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-300"
           aria-label="Close inspector"
         >
-          ×
+          <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16" shapeRendering="crispEdges">
+            <path d="M4 3 8 7 12 3 13 4 9 8 13 12 12 13 8 9 4 13 3 12 7 8 3 4Z" fill="currentColor" />
+          </svg>
         </button>
       </div>
       {legend && (
@@ -464,7 +551,7 @@ function NodeInspector({
         </p>
       )}
       {edges.length === 0 ? (
-        <p className="mt-1 text-xs text-stone-500">No relations.</p>
+        <p className="mt-1 text-xs text-stone-400">No relations.</p>
       ) : (
         <ul className="mt-1 max-h-40 space-y-1 overflow-y-auto text-xs text-stone-300">
           {edges.map((link, i) => {
@@ -472,17 +559,20 @@ function NodeInspector({
             const fact = data.facts[link.fact_id];
             return (
               <li key={i} className="font-mono text-xs">
-                <button onClick={() => onJump(other)} className="text-sky-300 hover:underline" title={`Jump to ${other}`}>
+                <button onClick={() => onJump(other)} className="inline-flex min-h-11 items-center rounded px-1 text-sky-300 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-300" title={`Jump to ${other}`}>
                   {other}
                 </button>{' '}
-                <span className="text-stone-500">
-                  {link.source === id ? '—' : '←'}
+                <span className="text-stone-400">
+                  <span className="text-amber-300">{link.source === id ? 'OUTGOING' : 'INCOMING'}</span>{' '}
                   {link.label}
-                  {link.source === id ? '→' : ''}
                 </span>{' '}
                 {fact && (
-                  <span className="text-stone-500">
-                    [{fact.derived ? `⇐ ${fact.rule_id ?? ''}`.trim() : fact.source ? `∈ ${fact.source}` : fact.category}]
+                  <span className="text-stone-400">
+                    [{fact.derived
+                      ? `Derived by ${fact.rule_id ?? 'an inference rule'}`
+                      : fact.source
+                        ? `Observed in ${fact.source}`
+                        : `Category: ${fact.category}`}]
                   </span>
                 )}
               </li>

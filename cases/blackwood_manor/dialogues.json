@@ -11,7 +11,7 @@
       "id": "mara_clock_02",
       "speaker": "mara",
       "requires": ["mara_clock_01"],
-      "text": "Back to the entrance for a cloth. And on my way... I saw Mr. Bob near the study. I said nothing at first. Forgive me.",
+      "text": "Back to the entrance for a cloth. And on my way... I saw Mr. Bob near the study. I said nothing at first. Forgive me. Take the study key; you have my leave to search.",
       "responses": [{"text": "Thank you, Mara.", "next": "mara_hall_02"}]
     },
     {

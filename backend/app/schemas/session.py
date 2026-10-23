@@ -36,6 +36,7 @@ class EvidenceDetail(BaseModel):
     title: str
     description: str
     location: str
+    category: Literal["key"] | None = None
 
 
 class FactDetail(BaseModel):
@@ -61,6 +62,7 @@ class InteractResponse(BaseModel):
 
 class DialogueVisitRequest(BaseModel):
     node_id: str = Field(min_length=1)
+    eavesdrop: bool = False
 
 
 class DialogueNodeDetail(BaseModel):
@@ -75,6 +77,7 @@ class DialogueVisitResponse(BaseModel):
     already_visited: bool
     unlocked_evidence: list[EvidenceDetail]
     event_counter: int
+    overheard: bool = False
 
 
 class KnowledgeResponse(BaseModel):
@@ -164,6 +167,8 @@ class AccuseResponse(BaseModel):
     contradicting: list[EvidenceCitation] = Field(default_factory=list)
     other_suspects_provable: list[str] = Field(default_factory=list)
     leads_remaining: list[str] = Field(default_factory=list)
+    leads_remaining_ids: list[str] = Field(default_factory=list)
+    solution_timeline: list[str] = Field(default_factory=list)
     proof: dict
     why: str
     score: int = 0
@@ -204,3 +209,75 @@ class ResolutionResponse(BaseModel):
     steps: list[dict] = Field(default_factory=list)
     substitution: dict[str, str] = Field(default_factory=dict)
     used_clauses: list[str] = Field(default_factory=list)
+
+
+class WhatIfFact(BaseModel):
+    name: str = Field(min_length=1)
+    args: list[str] = Field(default_factory=list)
+
+
+class WhatIfRequest(BaseModel):
+    exclude_evidence: list[str] = Field(default_factory=list)
+    extra_facts: list[WhatIfFact] = Field(default_factory=list)
+
+
+class WhatIfResponse(BaseModel):
+    base_suspects: list[str] = Field(default_factory=list)
+    hypo_suspects: list[str] = Field(default_factory=list)
+    added_suspects: list[str] = Field(default_factory=list)
+    removed_suspects: list[str] = Field(default_factory=list)
+    derived: list[DerivedDetail] = Field(default_factory=list)
+    new_derived_count: int = 0
+
+
+class ContradictionItem(BaseModel):
+    person: str
+    claimed_room: str = ""
+    actual_room: str = ""
+    time: str = ""
+    kind: str
+    rule_id: str = ""
+    evidence_ids: list[str] = Field(default_factory=list)
+
+
+class ContradictionsResponse(BaseModel):
+    items: list[ContradictionItem] = Field(default_factory=list)
+
+
+class CompareRequest(BaseModel):
+    suspects: list[str] = Field(min_length=1)
+
+
+class SuspectComparison(BaseModel):
+    suspect: str
+    provable: bool
+    support_level: str
+    supporting: list[EvidenceCitation] = Field(default_factory=list)
+    contradicting: list[EvidenceCitation] = Field(default_factory=list)
+    why: str = ""
+
+
+class CompareResponse(BaseModel):
+    compared: list[SuspectComparison] = Field(default_factory=list)
+
+
+class PrologExportResponse(BaseModel):
+    case_id: str
+    prolog: str
+
+
+class LinkRequest(BaseModel):
+    a: str = Field(min_length=1)
+    b: str = Field(min_length=1)
+
+
+class EvidenceLink(BaseModel):
+    conclusion: str
+    via_rules: list[str] = Field(default_factory=list)
+
+
+class LinkResponse(BaseModel):
+    a: str
+    b: str
+    linked: bool
+    links: list[EvidenceLink] = Field(default_factory=list)

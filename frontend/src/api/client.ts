@@ -21,6 +21,7 @@ export interface EvidenceDetail {
   title: string;
   description: string;
   location: string;
+  category?: 'key';
 }
 
 export interface FactDetail {
@@ -60,6 +61,11 @@ export interface CaseSummary {
   rules: number;
 }
 
+export interface DailyCase extends CaseSummary {
+  date: string;
+  seed: number;
+}
+
 export interface CaseObject {
   id: string;
   room: string;
@@ -79,7 +85,14 @@ export interface CaseInfo {
   npcs: CaseNpc[];
   evidence: Array<{ id: string; title: string }>;
   rooms: Array<{ id: string; name: string; description: string }>;
-  doors: Array<{ id: string; between: string[] }>;
+  doors: Array<{
+    id: string;
+    between: [string, string];
+    locked: boolean;
+    unlock_evidence?: string | null;
+    lock_hint?: string;
+    note?: string;
+  }>;
 }
 
 export interface EvidenceCitation {
@@ -109,6 +122,8 @@ export interface AccuseResult {
   contradicting: EvidenceCitation[];
   other_suspects_provable: string[];
   leads_remaining: string[];
+  leads_remaining_ids: string[];
+  solution_timeline: string[];
   proof: unknown;
   why: string;
   score: number;
@@ -130,8 +145,19 @@ export interface HintResponse {
 
 export interface QueryResult {
   success: boolean;
-  proof: unknown;
+  proof: ProofNodeDetail;
   why: string;
+}
+
+export interface ProofNodeDetail {
+  goal: FactDetail;
+  success: boolean;
+  fact_id: string | null;
+  rule_id: string | null;
+  substitution?: Record<string, string>;
+  category?: string;
+  source?: string | null;
+  children: ProofNodeDetail[];
 }
 
 export interface ResolutionResult {
@@ -181,6 +207,7 @@ export interface DialogueVisitResult {
   already_visited: boolean;
   unlocked_evidence: EvidenceDetail[];
   event_counter: number;
+  overheard: boolean;
 }
 
 class ApiError extends Error {
@@ -217,6 +244,8 @@ function fmt(pred: { name: string; args: string[] }): string {
 export const api = {
   health: () => request<{ status: string }>('/health'),
   cases: () => request<{ cases: CaseSummary[] }>('/cases'),
+
+  daily: () => request<DailyCase>('/cases/daily'),
   caseDetail: (caseId: string) => request<CaseInfo>(`/cases/${caseId}`),
   createSession: (caseId: string, difficulty = 'standard') =>
     request<SessionState>('/sessions', {
@@ -249,10 +278,10 @@ export const api = {
   world: (sessionId: string) => request<World>(`/sessions/${sessionId}/world`),
   dialogueList: (sessionId: string) =>
     request<{ nodes: DialogueListEntry[] }>(`/sessions/${sessionId}/dialogue`),
-  visitDialogue: (sessionId: string, nodeId: string) =>
+  visitDialogue: (sessionId: string, nodeId: string, eavesdrop = false) =>
     request<DialogueVisitResult>(`/sessions/${sessionId}/dialogue`, {
       method: 'POST',
-      body: JSON.stringify({ node_id: nodeId }),
+      body: JSON.stringify({ node_id: nodeId, eavesdrop }),
     }),
   accuse: (sessionId: string, suspect: string) =>
     request<AccuseResult>(`/sessions/${sessionId}/accuse`, {
@@ -261,6 +290,69 @@ export const api = {
     }),
   hint: (sessionId: string) =>
     request<HintResponse>(`/sessions/${sessionId}/hints`, { method: 'POST' }),
+  whatif: (
+    sessionId: string,
+    exclude_evidence: string[],
+    extra_facts: { name: string; args: string[] }[],
+  ) =>
+    request<WhatIfResult>(`/sessions/${sessionId}/reason/whatif`, {
+      method: 'POST',
+      body: JSON.stringify({ exclude_evidence, extra_facts }),
+    }),
+  contradictions: (sessionId: string) =>
+    request<{ items: Contradiction[] }>(`/sessions/${sessionId}/contradictions`),
+  compare: (sessionId: string, suspects: string[]) =>
+    request<{ compared: SuspectComparison[] }>(`/sessions/${sessionId}/reason/compare`, {
+      method: 'POST',
+      body: JSON.stringify({ suspects }),
+    }),
+  prologExport: (sessionId: string) =>
+    request<{ case_id: string; prolog: string }>(`/sessions/${sessionId}/knowledge/export`),
+  link: (sessionId: string, a: string, b: string) =>
+    request<LinkResult>(`/sessions/${sessionId}/reason/link`, {
+      method: 'POST',
+      body: JSON.stringify({ a, b }),
+    }),
 };
+
+export interface WhatIfResult {
+  base_suspects: string[];
+  hypo_suspects: string[];
+  added_suspects: string[];
+  removed_suspects: string[];
+  derived: DerivedDetail[];
+  new_derived_count: number;
+}
+
+export interface EvidenceLink {
+  conclusion: string;
+  via_rules: string[];
+}
+
+export interface LinkResult {
+  a: string;
+  b: string;
+  linked: boolean;
+  links: EvidenceLink[];
+}
+
+export interface Contradiction {
+  person: string;
+  claimed_room: string;
+  actual_room: string;
+  time: string;
+  kind: string;
+  rule_id: string;
+  evidence_ids: string[];
+}
+
+export interface SuspectComparison {
+  suspect: string;
+  provable: boolean;
+  support_level: string;
+  supporting: EvidenceCitation[];
+  contradicting: EvidenceCitation[];
+  why: string;
+}
 
 export { ApiError, fmt };

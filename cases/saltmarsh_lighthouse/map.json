@@ -1,0 +1,32 @@
+{
+  "rooms": [
+    {
+      "id": "causeway",
+      "name": "Causeway",
+      "description": "A wave-washed stone causeway joining the rock to the shore road. Gulls cry in the dark.",
+      "adjacent": ["galley", "bunkroom"],
+      "spawn": [96, 224]
+    },
+    {
+      "id": "galley",
+      "name": "Galley",
+      "description": "A cramped warm galley. Flour dusts every surface; bread rises under a cloth.",
+      "adjacent": ["causeway", "lamp_room"],
+      "spawn": [480, 240]
+    },
+    {
+      "id": "bunkroom",
+      "name": "Bunkroom",
+      "description": "Two narrow bunks, a sea-chest, and a coat hook. A ledger lies open on the blanket.",
+      "adjacent": ["causeway"],
+      "spawn": [240, 160]
+    },
+    {
+      "id": "lamp_room",
+      "name": "Lamp Room",
+      "description": "The great lamp, cold and dark. The oil store stands empty; an oily footprint marks the stair.",
+      "adjacent": ["galley"],
+      "spawn": [720, 160]
+    }
+  ]
+}

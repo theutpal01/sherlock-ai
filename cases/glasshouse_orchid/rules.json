@@ -1,0 +1,14 @@
+{
+  "comment":"These rules support or weaken a theory; none establishes guilt.",
+  "rules":[
+    {"id":"R_TIME_001","description":"The damaged thermometer fixes the time of the theft.","conditions":[{"name":"specimen_missing_at","args":["?specimen","?time"]}],"conclusion":{"name":"crime_time","args":["?time"]}},
+    {"id":"R_ACCESS_001","description":"A person holding a key that opens a case can access it.","conditions":[{"name":"has_key","args":["?person","?key"]},{"name":"opens","args":["?key","?case"]}],"conclusion":{"name":"can_access","args":["?person","?case"]}},
+    {"id":"R_TRACKS_001","description":"Matching boots place their wearer where the tracks were found at the crime time.","conditions":[{"name":"footprints_in","args":["?room","?soil"]},{"name":"boot_matches","args":["?person","?soil"]},{"name":"crime_time","args":["?time"]}],"conclusion":{"name":"was_at","args":["?person","?room","?time"]}},
+    {"id":"R_OPPORTUNITY_001","description":"Presence in the orchid gallery when the flower vanished establishes opportunity.","conditions":[{"name":"was_at","args":["?person","orchid_gallery","?time"]},{"name":"crime_time","args":["?time"]}],"conclusion":{"name":"has_opportunity","args":["?person"]}},
+    {"id":"R_MOTIVE_001","description":"A debt tied to a promised sale can supply a financial motive.","conditions":[{"name":"owes_money","args":["?person","?creditor"]}],"conclusion":{"name":"has_motive","args":["?person"]}},
+    {"id":"R_POSSIBLE_001","description":"Access, opportunity, and motive make someone a possible suspect, never a proven culprit.","conditions":[{"name":"can_access","args":["?person","orchid_case"]},{"name":"has_opportunity","args":["?person"]},{"name":"has_motive","args":["?person"]}],"conclusion":{"name":"possible_suspect","args":["?person"]}},
+    {"id":"R_ALIBI_001","description":"A claim to be in the office conflicts with evidence placing the same person in the gallery at that time.","conditions":[{"name":"claims_at","args":["?person","curator_office","?time"]},{"name":"was_at","args":["?person","orchid_gallery","?time"]}],"conclusion":{"name":"alibi_contradicted","args":["?person"]}},
+    {"id":"R_MEANS_001","description":"An unforced case and possession of the matching key link a suspect to the method.","conditions":[{"name":"opened_with_key","args":["orchid_case"]},{"name":"has_key","args":["?person","?key"]},{"name":"opens","args":["?key","orchid_case"]}],"conclusion":{"name":"had_means","args":["?person","orchid_case"]}},
+    {"id":"R_HANDLING_001","description":"Matching orchid pollen on gloves connects the wearer to handling the missing flower.","conditions":[{"name":"pollen_on","args":["?specimen","?gloves"]},{"name":"gloves_worn_by","args":["?gloves","?person"]}],"conclusion":{"name":"handled","args":["?person","?specimen"]}}
+  ]
+}

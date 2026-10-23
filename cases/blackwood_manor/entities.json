@@ -40,7 +40,7 @@
     {"id": "butlers_candle", "room": "cellar", "label": "Burnt candle stub", "evidence": "E_CANDLE"}
   ],
   "doors": [
-    {"id": "study_door", "between": ["hall", "study"], "locked": false, "note": "Unlocked in v1; lock mechanics arrive with the world-state service."},
+    {"id": "study_door", "between": ["hall", "study"], "locked": true, "unlock_evidence": "E_MARA_KEY", "lock_hint": "Mara has the study key", "note": "Mara lends the study key after giving her clock testimony."},
     {"id": "cellar_door", "between": ["hall", "cellar"], "locked": false, "note": "Stone stair down from the hall."}
   ]
 }

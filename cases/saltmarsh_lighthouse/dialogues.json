@@ -1,0 +1,39 @@
+{
+  "nodes": [
+    {
+      "id": "corwin_lamp_01",
+      "speaker": "corwin",
+      "requires": ["E_LAMP"],
+      "text": "The light failed at twenty to midnight. Thirty years I've kept it, and never once dark.",
+      "responses": [{"text": "Did you see anyone on the stair?", "next": "corwin_lamp_02"}]
+    },
+    {
+      "id": "corwin_lamp_02",
+      "speaker": "corwin",
+      "requires": ["corwin_lamp_01"],
+      "text": "Aye — young Finn, coming down from the lamp room as the alarm bell rang. I'd stake my pension on it.",
+      "responses": []
+    },
+    {
+      "id": "finn_bunk_01",
+      "speaker": "finn",
+      "requires": [],
+      "text": "Me? I never left the bunkroom all night. Never touched the stair, I swear it.",
+      "responses": [{"text": "Your coat smells of lamp oil.", "next": "finn_bunk_02"}]
+    },
+    {
+      "id": "finn_bunk_02",
+      "speaker": "finn",
+      "requires": ["finn_bunk_01"],
+      "text": "Oil? I... I trim the lamp some evenings. Ask Odda, not me — she's the one always climbing about.",
+      "responses": []
+    },
+    {
+      "id": "odda_galley_01",
+      "speaker": "odda",
+      "requires": [],
+      "text": "After supper I never left this galley, love. This bread's my witness — four hours a-rising, and me beside it.",
+      "responses": []
+    }
+  ]
+}

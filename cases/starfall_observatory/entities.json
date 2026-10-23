@@ -1,0 +1,44 @@
+{
+  "npcs": [
+    {
+      "id": "scholar",
+      "name": "Dr. Elias Vane",
+      "role": "Observatory director",
+      "location": "telescope_dome",
+      "description": "An exacting astronomer with a silver comet pin and ink-dark cuffs."
+    },
+    {
+      "id": "iris",
+      "name": "Mira Chen",
+      "role": "Dynamo mechanic",
+      "location": "entry_hall",
+      "description": "A practical mechanic in a patched work coat, impatient with anyone who calls a machine haunted."
+    },
+    {
+      "id": "mara",
+      "name": "Ada Voss",
+      "role": "Chart archivist",
+      "location": "chart_archive",
+      "description": "An exacting archivist who seals every plate and records every key."
+    }
+  ],
+  "objects": [
+    {"id": "plate_case", "room": "telescope_dome", "label": "Padded plate case", "evidence": "E_PLATE"},
+    {"id": "dome_lock", "room": "telescope_dome", "label": "Plate-case lock", "evidence": "E_LOCK"},
+    {"id": "star_log", "room": "telescope_dome", "label": "Telescope log", "evidence": "E_LOG"},
+    {"id": "dome_tracks", "room": "telescope_dome", "label": "Frosted dome tracks", "evidence": "E_TRACK"},
+    {"id": "key_register", "room": "chart_archive", "label": "Duplicate-key register", "evidence": "E_DARKROOM_KEY"},
+    {"id": "publisher_cable", "room": "chart_archive", "label": "Publisher's cable", "evidence": "E_DEBT"},
+    {"id": "archive_seal", "room": "chart_archive", "label": "Night accession ledger", "evidence": "E_ARCHIVE_SEAL"},
+    {"id": "elias_boots", "room": "darkroom", "label": "Director's observing boots", "evidence": "E_BOOTS"},
+    {"id": "emulsion_gloves", "room": "darkroom", "label": "Drying-room gloves", "evidence": "E_GLOVES"},
+    {"id": "dynamo_ledger", "room": "generator_room", "label": "Dynamo gauge and log", "evidence": "E_DYNAMO"}
+  ],
+  "doors": [
+    {"id": "entry_dome", "between": ["entry_hall", "telescope_dome"], "note": "Copper-rimmed arch into the main dome."},
+    {"id": "entry_archive", "between": ["entry_hall", "chart_archive"], "note": "A cedar door to the chart archive."},
+    {"id": "dome_darkroom", "between": ["telescope_dome", "darkroom"], "locked": true, "unlock_evidence": "E_DARKROOM_KEY", "lock_hint": "A brass key from the chart archive fits this lock.", "note": "The darkroom is locked while the lecture plate is missing."},
+    {"id": "dome_generator", "between": ["telescope_dome", "generator_room"], "note": "A narrow service stair descends to the dynamo."},
+    {"id": "archive_generator", "between": ["chart_archive", "generator_room"], "note": "A service door joins the archive to the dynamo room."}
+  ]
+}

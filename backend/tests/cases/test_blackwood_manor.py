@@ -121,6 +121,7 @@ def test_dialogue_trees_are_complete_chains():
         "E_MUD",
         "E_BOOTS",
         "E_WITNESS_MARA",
+        "E_MARA_KEY",
         "E_CLAIM_THEO",
         "E_CLAIM_BOB",
         "E_CANDLE",

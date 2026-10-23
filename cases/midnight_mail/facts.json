@@ -1,0 +1,9 @@
+{
+  "comment":"Background facts only. Suspect-specific links enter knowledge through discovered clues.",
+  "case_facts":[
+    {"name":"stored_in","args":["diplomatic_dispatch","dispatch_pouch"]},
+    {"name":"opens","args":["guard_van_key","guard_van"]},
+    {"name":"route_of","args":["night_express","victoria_dover"]},
+    {"name":"arrives_at","args":["night_express","dover","00_20"]}
+  ]
+}

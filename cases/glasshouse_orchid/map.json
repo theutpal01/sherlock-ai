@@ -1,0 +1,9 @@
+{
+  "rooms": [
+    {"id":"fern_corridor","name":"Fern Corridor","description":"A long green passage connects the conservatory rooms. Rain ticks against the glass roof and water gathers along the iron frames.","adjacent":["orchid_gallery","curator_office"],"spawn":[360,250]},
+    {"id":"orchid_gallery","name":"Orchid Gallery","description":"Moonlit orchids fill a tiled gallery. One brass-framed display case stands open beneath a cracked thermometer.","adjacent":["fern_corridor"],"spawn":[1120,250]},
+    {"id":"curator_office","name":"Curator's Office","description":"Plant catalogues and correspondence cover the curator's desk. A key ledger is kept in a locked drawer.","adjacent":["fern_corridor","potting_shed"],"spawn":[360,780]},
+    {"id":"potting_shed","name":"Potting Shed","description":"Terracotta pots and bags of rich soil crowd the benches. A silver watering can sits upside down beside the seed trays.","adjacent":["curator_office","boiler_room"],"spawn":[1120,780]},
+    {"id":"boiler_room","name":"Boiler Room","description":"The old greenhouse boiler keeps the glasshouse warm. Its pressure gauge and coal tally are logged every hour.","adjacent":["potting_shed"],"spawn":[1880,780]}
+  ]
+}

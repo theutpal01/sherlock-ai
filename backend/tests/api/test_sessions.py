@@ -135,6 +135,9 @@ def test_full_case_walkthrough_names_bob_and_theo(client: TestClient):
     ).json()
     assert why["success"] is True
     assert "R_SUSPECT_003" in why["why"]
+    verdict = client.post(f"/sessions/{sid}/accuse", json={"suspect": "bob"})
+    assert verdict.status_code == 200, verdict.text
+    assert verdict.json()["correct"] is True
 
 
 def test_move_event_tracks_room_without_ticking_clock(client: TestClient):

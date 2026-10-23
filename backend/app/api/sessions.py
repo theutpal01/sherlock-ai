@@ -19,6 +19,10 @@ from ..models.session import DialogueVisit, Discovery, Session, SessionHint
 from ..schemas.session import (
     AccuseRequest,
     AccuseResponse,
+    CompareRequest,
+    CompareResponse,
+    ContradictionItem,
+    ContradictionsResponse,
     CreateSessionRequest,
     DerivedDetail,
     DialogueListEntry,
@@ -35,11 +39,17 @@ from ..schemas.session import (
     HintResponse,
     InteractResponse,
     KnowledgeResponse,
+    LinkRequest,
+    LinkResponse,
     MoveEventRequest,
+    PrologExportResponse,
     ReasonQueryRequest,
     ReasonQueryResponse,
     ResolutionResponse,
     SessionResponse,
+    SuspectComparison,
+    WhatIfRequest,
+    WhatIfResponse,
     WorldEventDetail,
     WorldNpc,
     WorldResponse,
@@ -105,6 +115,7 @@ def _evidence_detail(case: LoadedCase, evidence_id: str) -> EvidenceDetail:
         title=item.title,
         description=item.description,
         location=item.location,
+        category=item.category,
     )
 
 
@@ -211,6 +222,18 @@ def visit_dialogue(session_id: str, body: DialogueVisitRequest, db: DbSession = 
             status_code=409,
             detail=f"Dialogue {node.id} is not yet available.",
         )
+    overheard = False
+    if body.eavesdrop:
+        # Overhearing grants the same node as talking, but only from the
+        # speaker's current room — position is the price of admission.
+        world = reasoning.compute_world(case, discovered, visited)
+        npc_room = world["locations"].get(node.speaker)
+        if session.current_room is None or session.current_room != npc_room:
+            raise HTTPException(
+                status_code=409,
+                detail=f"You must share a room with {node.speaker} to overhear.",
+            )
+        overheard = True
     already = body.node_id in visited
     if not already:
         session.event_counter += 1
@@ -247,6 +270,7 @@ def visit_dialogue(session_id: str, body: DialogueVisitRequest, db: DbSession = 
         already_visited=already,
         unlocked_evidence=unlocked,
         event_counter=session.event_counter,
+        overheard=overheard,
     )
 
 
@@ -287,9 +311,21 @@ def reason_query(session_id: str, body: ReasonQueryRequest, db: DbSession = Depe
     kb = reasoning.build_kb(case, reasoning.discovery_ids(db, session.id))
     goal = Predicate(name=body.goal.name, args=tuple(body.goal.args))
     node = reasoning.query_goal(case, kb, goal)
+    proof = node.to_dict()
+
+    def add_fact_origin(branch: dict) -> None:
+        fact_id = branch.get("fact_id")
+        record = kb.get(fact_id) if isinstance(fact_id, str) else None
+        if record is not None:
+            branch["category"] = record.category
+            branch["source"] = record.source
+        for child in branch.get("children", []):
+            add_fact_origin(child)
+
+    add_fact_origin(proof)
     return ReasonQueryResponse(
         success=node.success,
-        proof=node.to_dict(),
+        proof=proof,
         why=reasoning.explain(case, kb, node),
     )
 
@@ -377,7 +413,12 @@ def accuse(session_id: str, body: AccuseRequest, db: DbSession = Depends(get_db)
     session.score = breakdown["total"]
     session.completed_at = datetime.now(UTC)
     db.commit()
-    return AccuseResponse(**report, score=breakdown["total"], breakdown=breakdown)
+    return AccuseResponse(
+        **report,
+        solution_timeline=case.meta.truth.timeline,
+        score=breakdown["total"],
+        breakdown=breakdown,
+    )
 
 
 @router.get("/{session_id}/graph", response_model=GraphResponse)
@@ -418,8 +459,8 @@ def get_graph(session_id: str, db: DbSession = Depends(get_db)):
 def take_hint(session_id: str, db: DbSession = Depends(get_db)):
     """Next hint (−50 pts, no clock tick). Never repeats, never spoils.
 
-    409 on closed sessions and in classic difficulty; 404 when the player
-    has exhausted every hint (examine everything, then accuse).
+    409 on closed sessions and in classic difficulty; 404 when no new
+    eligible hint is available for the player's current progress.
     """
     session = _get_session(db, session_id)
     if session.status == "complete":
@@ -447,7 +488,10 @@ def take_hint(session_id: str, db: DbSession = Depends(get_db)):
         given=given,
     )
     if hint is None:
-        raise HTTPException(status_code=404, detail="No hints left — trust your notebook.")
+        raise HTTPException(
+            status_code=404,
+            detail="No new hint is available right now. Investigate further, then ask again.",
+        )
     db.add(SessionHint(session_id=session.id, hint_id=hint.id))
     session.hints_used = (session.hints_used or 0) + 1
     db.commit()
@@ -477,3 +521,85 @@ def reason_resolution(session_id: str, body: ReasonQueryRequest, db: DbSession =
     goal = Predicate(name=body.goal.name, args=tuple(body.goal.args))
     result = resolution_prove(goal, base_facts, case.rules)
     return ResolutionResponse(**result.to_dict())
+
+
+@router.post("/{session_id}/reason/whatif", response_model=WhatIfResponse)
+def reason_whatif(session_id: str, body: WhatIfRequest, db: DbSession = Depends(get_db)):
+    """Read-only sandbox: base KB minus excluded evidence plus hypotheticals.
+
+    Never writes to the session, never touches the truth block, never
+    concludes guilty(). 422 on unknown predicates/non-ground facts.
+    """
+    session = _get_session(db, session_id)
+    case = _get_case(session.case_id)
+    discovered = reasoning.discovery_ids(db, session.id)
+    try:
+        result = reasoning.whatif_analysis(
+            case,
+            discovered,
+            list(body.exclude_evidence),
+            [Predicate(name=f.name, args=tuple(f.args)) for f in body.extra_facts],
+        )
+    except DomainError as exc:
+        raise HTTPException(status_code=exc.status, detail=exc.detail) from exc
+    hypo_kb = result["derived"]
+    return WhatIfResponse(
+        base_suspects=result["base_suspects"],
+        hypo_suspects=result["hypo_suspects"],
+        added_suspects=result["added_suspects"],
+        removed_suspects=result["removed_suspects"],
+        derived=[_record_to_derived(r) for r in hypo_kb.all_records() if r.derived],
+        new_derived_count=result["new_derived_count"],
+    )
+
+
+@router.get("/{session_id}/contradictions", response_model=ContradictionsResponse)
+def get_contradictions(session_id: str, db: DbSession = Depends(get_db)):
+    """Claim-vs-fact mismatches from player-known facts only (no spoilers)."""
+    session = _get_session(db, session_id)
+    case = _get_case(session.case_id)
+    kb = reasoning.build_kb(case, reasoning.discovery_ids(db, session.id))
+    reasoning.run_inference(case, kb)
+    items = reasoning.contradiction_report(case, kb)
+    return ContradictionsResponse(items=[ContradictionItem(**i) for i in items])
+
+
+@router.post("/{session_id}/reason/compare", response_model=CompareResponse)
+def reason_compare(session_id: str, body: CompareRequest, db: DbSession = Depends(get_db)):
+    """Side-by-side provability WITHOUT revealing the culprit (no correct flag)."""
+    session = _get_session(db, session_id)
+    case = _get_case(session.case_id)
+    kb = reasoning.build_kb(case, reasoning.discovery_ids(db, session.id))
+    reasoning.run_inference(case, kb)
+    try:
+        rows = reasoning.compare_suspects(
+            case, kb, reasoning.discovery_ids(db, session.id), list(body.suspects)
+        )
+    except DomainError as exc:
+        raise HTTPException(status_code=exc.status, detail=exc.detail) from exc
+    return CompareResponse(compared=[SuspectComparison(**r) for r in rows])
+
+
+@router.get("/{session_id}/knowledge/export", response_model=PrologExportResponse)
+def export_knowledge(session_id: str, db: DbSession = Depends(get_db)):
+    """Prolog-style dump of the player-known KB (base + derived, no truth)."""
+    session = _get_session(db, session_id)
+    case = _get_case(session.case_id)
+    kb = reasoning.build_kb(case, reasoning.discovery_ids(db, session.id))
+    reasoning.run_inference(case, kb)
+    return PrologExportResponse(case_id=case.meta.id, prolog=reasoning.export_prolog(case, kb))
+
+
+@router.post("/{session_id}/reason/link", response_model=LinkResponse)
+def reason_link(session_id: str, body: LinkRequest, db: DbSession = Depends(get_db)):
+    """Test whether two discovered evidence items jointly feed a conclusion."""
+    session = _get_session(db, session_id)
+    case = _get_case(session.case_id)
+    discovered = set(reasoning.discovery_ids(db, session.id))
+    kb = reasoning.build_kb(case, reasoning.discovery_ids(db, session.id))
+    reasoning.run_inference(case, kb)
+    try:
+        result = reasoning.link_evidence(case, kb, discovered, body.a, body.b)
+    except DomainError as exc:
+        raise HTTPException(status_code=exc.status, detail=exc.detail) from exc
+    return LinkResponse(**result)

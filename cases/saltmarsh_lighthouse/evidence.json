@@ -1,0 +1,112 @@
+{
+  "evidence": [
+    {
+      "id": "E_LAMP",
+      "title": "Dark Beacon Lamp",
+      "description": "The great lamp is cold. The keeper's slate notes the light failed at twenty to midnight.",
+      "location": "lamp_room",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "beacon_lamp"},
+      "reveals": [
+        {"name": "lamp_dark", "args": ["beacon"]},
+        {"name": "lamp_dark_at", "args": ["beacon", "23_40"]}
+      ]
+    },
+    {
+      "id": "E_OIL",
+      "title": "Emptied Oil Store",
+      "description": "The oil store is bone dry. A full night's oil does not simply vanish.",
+      "location": "lamp_room",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "oil_can"},
+      "reveals": [{"name": "oil_missing", "args": ["oil_store"]}]
+    },
+    {
+      "id": "E_LOCK",
+      "title": "Undamaged Store Lock",
+      "description": "A close look at the store lock: no scratches, no force. It was opened with a key.",
+      "location": "lamp_room",
+      "requires": ["E_OIL"],
+      "discovery": {"kind": "interact", "object_id": "store_lock"},
+      "reveals": [{"name": "opened_with_key", "args": ["oil_store"]}]
+    },
+    {
+      "id": "E_COAT",
+      "title": "Spare Key in Finn's Coat",
+      "description": "In the pocket of Finn's coat: a spare brass store key, smelling faintly of lamp oil.",
+      "location": "bunkroom",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "finns_coat"},
+      "reveals": [{"name": "has_key", "args": ["finn", "brass_key"]}]
+    },
+    {
+      "id": "E_LEDGER",
+      "title": "Harbor Debt Ledger",
+      "description": "The open ledger: Finn owes the harbormaster more than a year's wages, due at moon's end.",
+      "location": "bunkroom",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "debt_ledger"},
+      "reveals": [{"name": "owes_money", "args": ["finn", "harbormaster"]}]
+    },
+    {
+      "id": "E_PRINTS",
+      "title": "Oily Footprint",
+      "description": "A fresh lamp-oil footprint on the lamp-room stair, heading down.",
+      "location": "lamp_room",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "oily_prints"},
+      "reveals": [{"name": "footprints_in", "args": ["lamp_room", "lamp_oil"]}]
+    },
+    {
+      "id": "E_BOOTS",
+      "title": "Finn's Sea Boots",
+      "description": "Slick with the same lamp oil as the stair print; the tread matches exactly.",
+      "location": "bunkroom",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "finns_seaboots"},
+      "reveals": [{"name": "boot_matches", "args": ["finn", "lamp_oil"]}]
+    },
+    {
+      "id": "E_APRON",
+      "title": "Floured Apron",
+      "description": "Odda's apron, caked in flour from collar to hem, still damp with kneading sweat.",
+      "location": "galley",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "flour_apron"},
+      "reveals": [
+        {"name": "floured", "args": ["galley_apron"]},
+        {"name": "apron_worn_by", "args": ["galley_apron", "odda"]}
+      ]
+    },
+    {
+      "id": "E_WITNESS_CORWIN",
+      "title": "Corwin's Testimony",
+      "description": "Corwin admits he saw Finn on the lamp-room stair at the time the light failed.",
+      "location": "causeway",
+      "requires": ["corwin_lamp_02"],
+      "discovery": {"kind": "dialogue", "node_id": "corwin_lamp_02"},
+      "reveals": [{"name": "was_at", "args": ["finn", "lamp_room", "23_40"]}],
+      "note": "Testimony, not objective truth: the source is recorded and it only feeds rules alongside other facts."
+    },
+    {
+      "id": "E_CLAIM_FINN",
+      "title": "Finn's Alibi Claim",
+      "description": "Finn insists he was in the bunkroom all night and never climbed the stair.",
+      "location": "bunkroom",
+      "requires": ["finn_bunk_01"],
+      "discovery": {"kind": "dialogue", "node_id": "finn_bunk_01"},
+      "reveals": [{"name": "claims_at", "args": ["finn", "bunkroom", "23_40"]}],
+      "note": "A claim, not a fact about the world: only usable via the alibi-contradiction rule."
+    },
+    {
+      "id": "E_CLAIM_ODDA",
+      "title": "Odda's Alibi Claim",
+      "description": "Odda states she never left the galley after supper; the bread proves it.",
+      "location": "galley",
+      "requires": ["odda_galley_01"],
+      "discovery": {"kind": "dialogue", "node_id": "odda_galley_01"},
+      "reveals": [{"name": "claims_at", "args": ["odda", "galley", "23_40"]}],
+      "note": "A claim, not a fact about the world: only usable via the alibi-contradiction rule."
+    }
+  ]
+}

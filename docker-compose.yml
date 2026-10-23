@@ -1,0 +1,32 @@
+# One command from the repo root:  docker compose up --build
+# Frontend on http://localhost:5173 (nginx), backend on :8000.
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      # Persist sessions outside the container lifecycle.
+      - SHERLOCK_DATABASE_URL=sqlite:////data/app.db
+    volumes:
+      - sherlock-data:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/ready')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  sherlock-data:

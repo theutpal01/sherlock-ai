@@ -1,0 +1,10 @@
+{
+  "comment": "Background facts only. The player's knowledge receives case truth exclusively through discovered clues and testimony.",
+  "case_facts": [
+    {"name": "contains", "args": ["negative_case", "comet_negative"]},
+    {"name": "opens", "args": ["dome_key", "negative_case"]},
+    {"name": "opens", "args": ["darkroom_key", "darkroom_door"]},
+    {"name": "has_key", "args": ["iris", "dynamo_key"]},
+    {"name": "opens", "args": ["dynamo_key", "generator_room"]}
+  ]
+}

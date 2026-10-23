@@ -3,7 +3,7 @@
     {
       "id": "E_CLOCK",
       "title": "Stopped Grandfather Clock",
-      "description": "The pendulum hangs still; the hands read half past nine and seventeen minutes.",
+      "description": "The pendulum hangs motionless; the clock stopped at 9:17.",
       "location": "hall",
       "requires": [],
       "discovery": {"kind": "interact", "object_id": "grandfather_clock"},
@@ -72,6 +72,16 @@
       "discovery": {"kind": "dialogue", "node_id": "mara_clock_02"},
       "reveals": [{"name": "was_at", "args": ["bob", "study", "21_17"]}],
       "note": "Testimony, not objective truth: the source is recorded and it only feeds rules alongside other facts."
+    },
+    {
+      "id": "E_MARA_KEY",
+      "title": "Mara's Study Key",
+      "description": "After sharing her testimony, Mara lends you the study key and grants permission to search the room.",
+      "location": "hall",
+      "category": "key",
+      "requires": ["mara_clock_02"],
+      "discovery": {"kind": "dialogue", "node_id": "mara_clock_02"},
+      "reveals": [{"name": "has_key", "args": ["player", "study_key"]}]
     },
     {
       "id": "E_CLAIM_THEO",

@@ -35,6 +35,17 @@ def test_gated_hint_jumps_queue_after_safe(client: TestClient):
     sid = _new_session(client)
     _hint(client, sid)  # talk:theo (given, undiscovered)
     client.post(f"/sessions/{sid}/interactions/grandfather_clock")
+    # The Study is locked until Mara gives the key after these conversations.
+    assert client.post(f"/sessions/{sid}/move-event", json={"room": "hall"}).status_code == 200
+    assert (
+        client.post(f"/sessions/{sid}/dialogue", json={"node_id": "mara_clock_01"}).status_code
+        == 200
+    )
+    assert (
+        client.post(f"/sessions/{sid}/dialogue", json={"node_id": "mara_clock_02"}).status_code
+        == 200
+    )
+    assert client.post(f"/sessions/{sid}/move-event", json={"room": "study"}).status_code == 200
     client.post(f"/sessions/{sid}/interactions/study_safe")
     hint = _hint(client, sid)
     assert hint["hint"]["id"] == "examine:E_LOCK"
@@ -106,7 +117,7 @@ def test_invalid_difficulty_rejected(client: TestClient):
     )
 
 
-def test_perfect_standard_run_scores_860(client: TestClient):
+def test_clean_standard_run_scores_850(client: TestClient):
     sid = _new_session(client)
     for obj in (
         "grandfather_clock",
@@ -121,9 +132,11 @@ def test_perfect_standard_run_scores_860(client: TestClient):
     for node in ("mara_clock_01", "mara_clock_02", "theo_alibi_01", "bob_greet_01"):
         client.post(f"/sessions/{sid}/dialogue", json={"node_id": node})
     body = client.post(f"/sessions/{sid}/accuse", json={"suspect": "bob"}).json()
-    assert body["score"] == 860  # 1000 - 10*14 actions, no hints
+    assert body["score"] == 850  # 1000 - 10*15 case events, no hints
     assert body["breakdown"]["multiplier"] == 1
-    assert client.get(f"/sessions/{sid}").json()["score"] == 860
+    session = client.get(f"/sessions/{sid}").json()
+    assert session["event_counter"] == 15
+    assert session["score"] == 850
 
 
 def test_hint_costs_and_classic_doubles(client: TestClient):
@@ -149,7 +162,7 @@ def test_hint_costs_and_classic_doubles(client: TestClient):
     for node in ("mara_clock_01", "mara_clock_02", "theo_alibi_01", "bob_greet_01"):
         client.post(f"/sessions/{sid2}/dialogue", json={"node_id": node})
     body2 = client.post(f"/sessions/{sid2}/accuse", json={"suspect": "bob"}).json()
-    assert body2["score"] == 1720  # (1000 - 140) * 2
+    assert body2["score"] == 1700  # (1000 - 150) * 2
 
 
 def test_hints_closed_after_accusation(client: TestClient):

@@ -1,0 +1,144 @@
+{
+  "evidence": [
+    {
+      "id": "E_PLATE",
+      "title": "The Vanished Comet Negative",
+      "description": "The padded case is empty. Its waxed sleeve was opened cleanly, without tearing the paper seal around the cabinet.",
+      "location": "telescope_dome",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "plate_case"},
+      "reveals": [{"name": "plate_missing", "args": ["comet_negative"]}]
+    },
+    {
+      "id": "E_LOCK",
+      "title": "Unforced Plate-Case Lock",
+      "description": "The brass lock has no tool marks. Someone opened the case with its duplicate dome key.",
+      "location": "telescope_dome",
+      "requires": ["E_PLATE"],
+      "discovery": {"kind": "interact", "object_id": "dome_lock"},
+      "reveals": [{"name": "opened_with_key", "args": ["negative_case"]}]
+    },
+    {
+      "id": "E_LOG",
+      "title": "The 22:45 Telescope Entry",
+      "description": "The log records a final focus adjustment at 22:45, the last time the plate was listed in the dome.",
+      "location": "telescope_dome",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "star_log"},
+      "reveals": [
+        {"name": "plate_missing_at", "args": ["comet_negative", "22_45"]},
+        {"name": "telescope_moved", "args": ["dome", "22_45"]}
+      ]
+    },
+    {
+      "id": "E_TRACK",
+      "title": "Blue-Silica Footprints",
+      "description": "A fresh trail crosses the dome floor from the case to the service arch. The blue grit is used only on the observatory roof.",
+      "location": "telescope_dome",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "dome_tracks"},
+      "reveals": [{"name": "footprints_in", "args": ["telescope_dome", "blue_silica"]}]
+    },
+    {
+      "id": "E_DARKROOM_KEY",
+      "title": "Duplicate Dome Key on the Register Ring",
+      "description": "A brass key ring is hidden behind the chart register. The darkroom key is there; the sign-out beside the duplicate dome key bears Dr. Vane's initials.",
+      "location": "chart_archive",
+      "category": "key",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "key_register"},
+      "reveals": [
+        {"name": "has_key", "args": ["scholar", "dome_key"]},
+        {"name": "has_key", "args": ["detective", "darkroom_key"]}
+      ]
+    },
+    {
+      "id": "E_DEBT",
+      "title": "The Publisher's Cable",
+      "description": "A terse cable demands repayment of Elias Vane's private advance before the end of the month.",
+      "location": "chart_archive",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "publisher_cable"},
+      "reveals": [{"name": "owes_money", "args": ["scholar", "publisher"]}]
+    },
+    {
+      "id": "E_ARCHIVE_SEAL",
+      "title": "Ada's Sealed Accession",
+      "description": "Ada's wax seal closes the accession book across the 22:45 entry. The archive record was written in her hand.",
+      "location": "chart_archive",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "archive_seal"},
+      "reveals": [{"name": "was_at", "args": ["mara", "chart_archive", "22_45"]}]
+    },
+    {
+      "id": "E_BOOTS",
+      "title": "Silica in Elias's Boots",
+      "description": "The director's observing boots carry the same blue roof grit as the tracks across the dome.",
+      "location": "darkroom",
+      "requires": ["E_DARKROOM_KEY"],
+      "discovery": {"kind": "interact", "object_id": "elias_boots"},
+      "reveals": [{"name": "boot_matches", "args": ["scholar", "blue_silica"]}]
+    },
+    {
+      "id": "E_GLOVES",
+      "title": "Emulsion on the Director's Gloves",
+      "description": "A trace of silver emulsion marks gloves monogrammed with Elias Vane's comet pin.",
+      "location": "darkroom",
+      "requires": ["E_DARKROOM_KEY"],
+      "discovery": {"kind": "interact", "object_id": "emulsion_gloves"},
+      "reveals": [
+        {"name": "emulsion_on", "args": ["comet_negative", "director_gloves"]},
+        {"name": "gloves_worn_by", "args": ["director_gloves", "scholar"]}
+      ]
+    },
+    {
+      "id": "E_DYNAMO",
+      "title": "The Steady Dynamo",
+      "description": "The gauge never dipped at 22:45. Mira's grease-marked log puts her at the generator when the negative vanished.",
+      "location": "generator_room",
+      "requires": [],
+      "discovery": {"kind": "interact", "object_id": "dynamo_ledger"},
+      "reveals": [{"name": "was_at", "args": ["iris", "generator_room", "22_45"]}]
+    },
+    {
+      "id": "E_CLAIM_ADA",
+      "title": "Ada's Archive Alibi",
+      "description": "Ada says she stayed in the chart archive through the 22:45 accession.",
+      "location": "chart_archive",
+      "requires": ["ada_archive_01"],
+      "discovery": {"kind": "dialogue", "node_id": "ada_archive_01"},
+      "reveals": [{"name": "claims_at", "args": ["mara", "chart_archive", "22_45"]}],
+      "note": "A statement attributed to Ada, not an objective fact."
+    },
+    {
+      "id": "E_ADA_SIGHTING",
+      "title": "Ada Saw Elias Leave the Dome",
+      "description": "Ada saw the director on the dome stair at 22:45 carrying an empty negative sleeve.",
+      "location": "chart_archive",
+      "requires": ["ada_archive_02"],
+      "discovery": {"kind": "dialogue", "node_id": "ada_archive_02"},
+      "reveals": [{"name": "was_at", "args": ["scholar", "telescope_dome", "22_45"]}],
+      "note": "Testimony is recorded as testimony and only supports deductions alongside other evidence."
+    },
+    {
+      "id": "E_CLAIM_ELIAS",
+      "title": "Elias's Archive Alibi",
+      "description": "Elias insists he was among the star charts at 22:45 and never entered the dome.",
+      "location": "telescope_dome",
+      "requires": ["elias_alibi_01"],
+      "discovery": {"kind": "dialogue", "node_id": "elias_alibi_01"},
+      "reveals": [{"name": "claims_at", "args": ["scholar", "chart_archive", "22_45"]}],
+      "note": "A claim, not a fact about the world; only usable through alibi reasoning."
+    },
+    {
+      "id": "E_CLAIM_MIRA",
+      "title": "Mira's Generator Alibi",
+      "description": "Mira says she stayed with the dynamo at 22:45. The machine log supports her account.",
+      "location": "entry_hall",
+      "requires": ["mira_alibi_01"],
+      "discovery": {"kind": "dialogue", "node_id": "mira_alibi_01"},
+      "reveals": [{"name": "claims_at", "args": ["iris", "generator_room", "22_45"]}],
+      "note": "A claim corroborated by the dynamo log, not a conclusion about guilt."
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "nodes": [
+    {
+      "id": "ada_archive_01",
+      "speaker": "mara",
+      "requires": [],
+      "text": "I sealed the negative into its case at ten to ten. The accession book has not left this room since.",
+      "responses": [{"text": "Did you see anyone near the dome at quarter to eleven?", "next": "ada_archive_02"}]
+    },
+    {
+      "id": "ada_archive_02",
+      "speaker": "mara",
+      "requires": ["ada_archive_01"],
+      "text": "Elias came down the dome stair at 22:45 with an empty sleeve under his arm. He said it was only a lens cloth.",
+      "responses": []
+    },
+    {
+      "id": "elias_alibi_01",
+      "speaker": "scholar",
+      "requires": [],
+      "text": "I was in the chart archive at 22:45. The dome was locked, and I never borrowed its duplicate key.",
+      "responses": []
+    },
+    {
+      "id": "mira_alibi_01",
+      "speaker": "iris",
+      "requires": [],
+      "text": "The dynamo stayed steady all evening. I was with the machine at 22:45; its log will show you.",
+      "responses": []
+    }
+  ]
+}

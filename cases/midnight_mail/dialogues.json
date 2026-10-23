@@ -1,0 +1,7 @@
+{
+  "nodes": [
+    {"id":"ada_mail_01","speaker":"ada","requires":[],"text":"The pouch was sound when I left it. I spent the whole signal stop sorting the ordinary bags; I never entered the guard's van.","responses":[]},
+    {"id":"arthur_guard_01","speaker":"arthur","requires":[],"text":"I checked the seal ledger before and after Redbridge. No one should have had the spare key without my knowing.","responses":[]},
+    {"id":"finn_platform_01","speaker":"finn","requires":[],"text":"I was on the platform the whole time. The train never gave me a chance to climb aboard after it left Victoria.","responses":[]}
+  ]
+}

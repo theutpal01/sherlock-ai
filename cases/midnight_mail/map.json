@@ -1,0 +1,10 @@
+{
+  "rooms": [
+    {"id":"victoria_platform","name":"Victoria Platform","description":"Rain and coal smoke blur the gas lamps. The Dover express waits beneath the station clock.","adjacent":["postal_carriage","dining_car","conductor_cabin"],"spawn":[360,250]},
+    {"id":"postal_carriage","name":"Postal Carriage","description":"Canvas sacks sway in the narrow aisle. One dispatch pouch hangs open beneath the sorting shelf.","adjacent":["victoria_platform","guard_van"],"spawn":[1120,250]},
+    {"id":"guard_van","name":"Guard's Van","description":"A cramped van of ledgers, lamps, and sealed parcels. A heavy door connects it to the mail carriage.","adjacent":["postal_carriage","luggage_car"],"spawn":[360,780]},
+    {"id":"dining_car","name":"Dining Car","description":"Silver cutlery rattles on white linen. The last passengers have left their coffee untouched.","adjacent":["victoria_platform"],"spawn":[1880,250]},
+    {"id":"conductor_cabin","name":"Conductor's Cabin","description":"A narrow desk holds the route book, signal notices, and a ring of train keys.","adjacent":["victoria_platform"],"spawn":[1120,780]},
+    {"id":"luggage_car","name":"Luggage Car","description":"Trunks are stacked beside the sliding doors. One bears fresh brass scratches around its lock.","adjacent":["guard_van"],"spawn":[360,1280]}
+  ]
+}

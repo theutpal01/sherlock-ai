@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "gray-on-color",
+        "value": "*",
+        "files": [
+          "frontend/src/app/components/ForensicsGame/index.tsx"
+        ],
+        "createdAt": "2026-10-20T21:39:29.128Z",
+        "reason": "Codex review: line 236 uses text-stone-950 over bg-amber-500, giving near-black on amber with strong contrast; the detector's gray-text label does not match this value."
+      }
+    ]
+  }
+}
